@@ -1,0 +1,81 @@
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="header-row">
+    <text class="page-title">我的订单</text>
+    <text class="page-sub">全部服务进度一目了然</text>
+  </view>
+
+  <!-- 状态筛选 Tabs -->
+  <scroll-view scroll-x class="status-tabs" enable-flex="true">
+    <view 
+      wx:for="{{tabs}}" 
+      wx:key="*this"
+      class="tab-item {{currentTab === item ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="{{item}}"
+    >
+      {{item}}
+    </view>
+  </scroll-view>
+
+  <!-- 订单列表 -->
+  <view class="order-list" wx:if="{{filteredOrders.length > 0}}">
+    <view 
+      wx:for="{{filteredOrders}}" 
+      wx:key="id" 
+      class="order-card"
+    >
+      <!-- 顶部单号与状态 -->
+      <view class="card-top">
+        <text class="order-no">单号 {{item.orderNo}}</text>
+        <view class="status-pill {{item.status === '服务中' ? 'active-pill' : (item.status === '待匹配' || item.status === '待接单' ? 'pending-pill' : '')}}">
+          {{item.status}}
+        </view>
+      </view>
+
+      <!-- 服务名称与价格 -->
+      <view class="service-row">
+        <text class="service-title">{{item.serviceName}}</text>
+        <text class="service-price">¥{{item.amount}}</text>
+      </view>
+
+      <!-- 服务时间与地址 -->
+      <view class="info-row">
+        <text class="info-icon">🕒</text>
+        <text class="info-text">{{item.scheduledAt}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-icon">📍</text>
+        <text class="info-text">{{item.address}}</text>
+      </view>
+
+      <!-- 服务人员简讯 (若有) -->
+      <view class="worker-bar" wx:if="{{item.providerName}}">
+        <view class="worker-left">
+          <text class="worker-avatar-icon">👩</text>
+          <text class="worker-name">{{item.providerName}}</text>
+          <text class="worker-badge">金牌服务</text>
+        </view>
+        <text class="worker-action" bindtap="contactWorker" data-name="{{item.providerName}}">联系服务员 ›</text>
+      </view>
+
+      <!-- 底部操作按钮栏 -->
+      <view class="card-bottom">
+        <button class="action-btn secondary-btn" bindtap="viewOrderDetail" data-order="{{item}}">
+          查看进度
+        </button>
+        <button class="action-btn main-btn" bindtap="handleOrderAction" data-order="{{item}}">
+          {{item.status === '待匹配' ? '催促匹配' : (item.status === '服务中' ? '三方沟通' : '再来一单')}}
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:else>
+    <view class="empty-icon">📋</view>
+    <text class="empty-title">暂无相关订单</text>
+    <text class="empty-sub">您可以去首页选择服务套餐快速发单</text>
+    <button class="empty-btn" bindtap="goServices">去选服务</button>
+  </view>
+</view>

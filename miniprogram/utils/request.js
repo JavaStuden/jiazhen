@@ -1,0 +1,1 @@
+const app=getApp();function request(path,options={}){return new Promise((resolve,reject)=>wx.request({url:app.globalData.apiBaseUrl+path,...options,header:{'content-type':'application/json',...(options.header||{})},success:r=>r.statusCode>=200&&r.statusCode<300?resolve(r.data):reject(r),fail:reject}))}module.exports={request}

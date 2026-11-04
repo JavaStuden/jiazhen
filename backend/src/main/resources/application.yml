@@ -1,0 +1,24 @@
+server:
+  port: 8080
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: true
+        same-site: lax
+spring:
+  application:
+    name: taihexing-home-service
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/taihexing?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    username: ${DB_USERNAME:taihexing}
+    password: ${DB_PASSWORD:taihexing}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Shanghai

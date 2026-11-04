@@ -1,0 +1,102 @@
+<view class="container">
+  <!-- 顶部服务人员信息栏 -->
+  <view class="worker-card">
+    <view class="worker-avatar-wrap">
+      <image class="worker-avatar" src="/images/logo.jpg" mode="aspectFill"></image>
+      <view class="badge-tag">金牌</view>
+    </view>
+    <view class="worker-info">
+      <view class="name-row">
+        <text class="worker-name">李阿姨</text>
+        <text class="worker-skill">保洁师 · 养老护理员</text>
+      </view>
+      <view class="meta-row">
+        <text class="meta-tag">信用 96分</text>
+        <text class="meta-tag">证件有效</text>
+        <text class="meta-tag">接单中</text>
+      </view>
+    </view>
+    <view class="switch-client-btn" bindtap="switchToCustomer">
+      <text class="switch-btn-text">切换雇主端</text>
+    </view>
+  </view>
+
+  <!-- 收入与统计看板 -->
+  <view class="stats-card">
+    <view class="stats-top">
+      <text class="stats-title">今日有 18 个附近订单可抢</text>
+      <view class="bell-pill" bindtap="toggleBell">
+        <text class="bell-icon">🔔</text>
+        <text class="bell-text">{{bellEnabled ? '听单已开启' : '听单已静音'}}</text>
+      </view>
+    </view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-val">¥8,680</text>
+        <text class="stat-lbl">本月收入</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-val">¥398</text>
+        <text class="stat-lbl">待结算</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-val">¥320</text>
+        <text class="stat-lbl">已冻结保证金</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 附近可抢订单标题 -->
+  <view class="section-row">
+    <view class="section-left">
+      <view class="section-dot"></view>
+      <text class="section-title">附近可抢订单</text>
+    </view>
+    <view class="filter-chips">
+      <text class="filter-chip active">智能匹配</text>
+      <text class="filter-chip">距离优先</text>
+      <text class="filter-chip">信用优先</text>
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view class="orders-wrap">
+    <view class="grab-card" wx:for="{{grabOrders}}" wx:key="id">
+      <view class="grab-top">
+        <view class="tag-label-wrap">
+          <text class="match-tag">优先匹配</text>
+          <text class="type-tag">{{item.category}}</text>
+        </view>
+        <view class="income-wrap">
+          <text class="income-label">预计收入</text>
+          <text class="income-val">¥{{item.netIncome}}</text>
+        </view>
+      </view>
+
+      <view class="grab-title-row">
+        <text class="grab-title">{{item.title}}</text>
+        <text class="distance-badge">{{item.distance}}</text>
+      </view>
+
+      <view class="time-address">
+        <text class="ta-item">🕒 {{item.time}}</text>
+        <text class="ta-item">📍 {{item.address}}</text>
+      </view>
+
+      <view class="employer-meta">
+        <text class="employer-text">雇主信用 {{item.employerCredit}}分 · 历史发单{{item.orderCount}}次 · 好评率100%</text>
+      </view>
+
+      <view class="grab-bottom">
+        <view class="fee-breakdown">
+          <text class="fee-text">服务价 ¥{{item.totalPrice}} - 平台费 ¥{{item.platformFee}}</text>
+        </view>
+        <button class="grab-btn" bindtap="grabOrder" data-order="{{item}}">
+          立即抢单
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

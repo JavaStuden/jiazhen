@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/index/index",
+    "pages/services/services",
+    "pages/create-order/create-order",
+    "pages/orders/orders",
+    "pages/profile/profile",
+    "pages/worker/worker"
+  ],
+  "window": {
+    "navigationBarTitleText": "太禾行到家",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f8fa"
+  },
+  "tabBar": {
+    "color": "#8d949c",
+    "selectedColor": "#ff6a00",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "订单"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  }
+}

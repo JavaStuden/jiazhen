@@ -1,0 +1,9 @@
+[Unit]
+Description=Back up Taihexing MySQL database
+After=docker.service
+Requires=docker.service
+ConditionPathExists=/opt/taihexing-home-service/.env
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/taihexing-db-backup

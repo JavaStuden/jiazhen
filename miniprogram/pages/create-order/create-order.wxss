@@ -1,0 +1,411 @@
+page {
+  background-color: #f7f8fa;
+  min-height: 100vh;
+}
+
+.container {
+  padding: 20rpx 28rpx;
+  box-sizing: border-box;
+}
+
+/* 顶部三步进度条 */
+.steps-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 0 28rpx;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-circle {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8rpx;
+}
+
+.done-circle {
+  border: 2rpx solid #ff6a00;
+  color: #ff6a00;
+  background: #ffffff;
+}
+
+.active-circle {
+  background: #ff6a00;
+  border: 2rpx solid #ff6a00;
+  color: #ffffff;
+}
+
+.pending-circle {
+  border: 2rpx solid #cdd1d8;
+  color: #8f959e;
+  background: #ffffff;
+}
+
+.step-num {
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.step-name {
+  font-size: 22rpx;
+  color: #646a73;
+}
+
+.active-name {
+  color: #ff6a00;
+  font-weight: 700;
+}
+
+.pending-name {
+  color: #8f959e;
+}
+
+.step-line {
+  width: 90rpx;
+  height: 2rpx;
+  background: #dfe2e7;
+  margin: -30rpx 16rpx 0;
+}
+
+.active-line {
+  background: #ff6a00;
+}
+
+/* 语音下单横幅 */
+.voice-banner {
+  background: linear-gradient(135deg, #ff7e1d 0%, #ff5200 100%);
+  border-radius: 24rpx;
+  padding: 24rpx 26rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 95, 0, 0.28);
+}
+
+.voice-tag {
+  background: #ffffff;
+  border-radius: 10rpx;
+  padding: 4rpx 14rpx;
+  margin-right: 18rpx;
+}
+
+.voice-tag-text {
+  font-size: 22rpx;
+  color: #ff6a00;
+  font-weight: 700;
+}
+
+.voice-content {
+  flex: 1;
+}
+
+.voice-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #ffffff;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.voice-subtitle {
+  font-size: 21rpx;
+  color: rgba(255, 255, 255, 0.88);
+  display: block;
+}
+
+.voice-btn {
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 28rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.voice-btn.recording {
+  background: #ffe3d1;
+}
+
+.voice-btn-text {
+  font-size: 24rpx;
+  color: #ff6a00;
+  font-weight: 700;
+}
+
+/* 卡片基类 */
+.card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 28rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  border: 1rpx solid #eceef2;
+  margin-bottom: 22rpx;
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1a2233;
+}
+
+/* 服务规格卡片 */
+.specs-card {
+  padding-bottom: 12rpx;
+}
+
+.spec-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22rpx 0;
+  border-bottom: 1rpx solid #f3f5f8;
+}
+
+.row-label {
+  font-size: 28rpx;
+  color: #1f2329;
+  font-weight: 500;
+  width: 140rpx;
+  flex-shrink: 0;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+}
+
+.chip {
+  padding: 10rpx 26rpx;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  color: #4e5969;
+  background: #f5f6f8;
+  border: 1rpx solid #e5e6eb;
+  transition: all 0.2s ease;
+}
+
+.chip.active {
+  background: #ff6a00;
+  color: #ffffff;
+  border-color: #ff6a00;
+  font-weight: 600;
+}
+
+.arrow-row {
+  cursor: pointer;
+}
+
+.row-right {
+  display: flex;
+  align-items: center;
+  max-width: 500rpx;
+}
+
+.row-val {
+  font-size: 28rpx;
+  color: #1f2329;
+  font-weight: 600;
+}
+
+.address-val {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 440rpx;
+}
+
+.arrow {
+  font-size: 32rpx;
+  color: #c4c8d0;
+  margin-left: 10rpx;
+}
+
+/* 预算自动生成提示卡片 */
+.budget-tip-card {
+  background: #ffffff;
+  border-radius: 22rpx;
+  padding: 22rpx 28rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22rpx;
+  border: 1rpx solid #eceef2;
+}
+
+.tip-sub {
+  font-size: 22rpx;
+  color: #8d949c;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.tip-amount {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+.detail-link {
+  font-size: 24rpx;
+  color: #8d949c;
+}
+
+/* 本次上门服务内容（核心模块） */
+.content-card {
+  padding: 30rpx 28rpx;
+}
+
+.content-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 26rpx;
+}
+
+.content-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1a2233;
+}
+
+.package-pill-tag {
+  background: #fff1e8;
+  border-radius: 12rpx;
+  padding: 6rpx 18rpx;
+}
+
+.package-pill-text {
+  font-size: 22rpx;
+  color: #ff6a00;
+  font-weight: 600;
+}
+
+.service-items-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx 16rpx;
+  margin-bottom: 26rpx;
+}
+
+.service-bullet {
+  display: flex;
+  align-items: flex-start;
+}
+
+.orange-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #ff6a00;
+  margin-right: 12rpx;
+  margin-top: 10rpx;
+  flex-shrink: 0;
+}
+
+.bullet-text {
+  font-size: 24rpx;
+  color: #333842;
+  line-height: 1.45;
+}
+
+.disclaimer-notice {
+  background: #fff9f6;
+  border-radius: 16rpx;
+  padding: 18rpx 22rpx;
+  border: 1rpx solid #ffe9de;
+}
+
+.disclaimer-line {
+  font-size: 22rpx;
+  color: #c85e26;
+  line-height: 1.5;
+  display: block;
+}
+
+/* 平台沟通安全提示 */
+.security-banner {
+  background: #fff5ec;
+  border-radius: 14rpx;
+  padding: 18rpx 24rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.security-bar {
+  width: 6rpx;
+  height: 28rpx;
+  background: #ff6a00;
+  border-radius: 4rpx;
+  margin-right: 16rpx;
+}
+
+.security-text {
+  font-size: 22rpx;
+  color: #d65916;
+  font-weight: 500;
+}
+
+.bottom-placeholder {
+  height: 150rpx;
+}
+
+/* 底部结算悬浮栏 */
+.bottom-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120rpx;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32rpx;
+  box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.price-wrap {
+  display: flex;
+  align-items: baseline;
+}
+
+.budget-label {
+  font-size: 24rpx;
+  color: #86909c;
+  margin-right: 12rpx;
+}
+
+.budget-val {
+  font-size: 42rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+.submit-btn {
+  height: 84rpx;
+  line-height: 84rpx;
+  padding: 0 44rpx;
+  background: linear-gradient(135deg, #ff7e1d 0%, #ff5500 100%);
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 700;
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 20rpx rgba(255, 95, 0, 0.3);
+  margin: 0;
+}
+
+.submit-btn::after {
+  border: none;
+}

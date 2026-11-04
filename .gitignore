@@ -1,0 +1,12 @@
+**/target/
+**/node_modules/
+**/dist/
+.idea/
+.vscode/
+.env
+**/.env
+*.env
+*.iml
+miniprogram/project.private.config.json
+*.log
+*.zip

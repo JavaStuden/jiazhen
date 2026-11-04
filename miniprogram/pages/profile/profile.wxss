@@ -1,0 +1,225 @@
+page {
+  background-color: #f7f8fa;
+  min-height: 100vh;
+}
+
+.container {
+  padding: 24rpx 28rpx 60rpx;
+  box-sizing: border-box;
+}
+
+/* 用户卡片 */
+.user-card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 32rpx 28rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  border: 1rpx solid #eceef2;
+  margin-bottom: 24rpx;
+}
+
+.avatar-box {
+  position: relative;
+  width: 104rpx;
+  height: 104rpx;
+  margin-right: 22rpx;
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3rpx solid #fff2e8;
+}
+
+.online-dot {
+  position: absolute;
+  bottom: 4rpx;
+  right: 4rpx;
+  width: 22rpx;
+  height: 22rpx;
+  border-radius: 50%;
+  background: #19b37b;
+  border: 3rpx solid #ffffff;
+}
+
+.user-meta {
+  flex: 1;
+}
+
+.user-title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.user-name {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #1a2233;
+  margin-right: 14rpx;
+}
+
+.credit-tag {
+  background: #fff0e5;
+  color: #ff6a00;
+  font-size: 20rpx;
+  font-weight: 700;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.user-phone {
+  font-size: 24rpx;
+  color: #8d949c;
+}
+
+.switch-role-btn {
+  background: #f2f4f7;
+  padding: 10rpx 22rpx;
+  border-radius: 999rpx;
+}
+
+.switch-text {
+  font-size: 22rpx;
+  color: #4e5969;
+  font-weight: 600;
+}
+
+/* 钱包与预算账户 */
+.wallet-card {
+  background: linear-gradient(135deg, #2b3342 0%, #1e2430 100%);
+  border-radius: 28rpx;
+  padding: 32rpx 30rpx;
+  color: #ffffff;
+  margin-bottom: 26rpx;
+  box-shadow: 0 8rpx 24rpx rgba(30, 36, 48, 0.2);
+}
+
+.wallet-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24rpx;
+}
+
+.wallet-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.wallet-amount {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #ffb076;
+}
+
+.wallet-divider {
+  width: 100%;
+  height: 1rpx;
+  background: rgba(255, 255, 255, 0.12);
+  margin-bottom: 24rpx;
+}
+
+.wallet-stats {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6rpx;
+}
+
+.stat-name {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* 菜单区 */
+.menu-card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 30rpx 24rpx;
+  margin-bottom: 30rpx;
+  border: 1rpx solid #eceef2;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.menu-heading {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1a2233;
+  margin-bottom: 24rpx;
+  padding-left: 10rpx;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28rpx 10rpx;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu-icon {
+  font-size: 42rpx;
+  margin-bottom: 12rpx;
+}
+
+.menu-text {
+  font-size: 24rpx;
+  color: #333842;
+}
+
+/* 底部操作 */
+.action-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.worker-mode-btn {
+  background: #e8f8f0;
+  color: #19b37b;
+  font-size: 28rpx;
+  font-weight: 700;
+  border-radius: 20rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  border: 1rpx solid #c2eed9;
+}
+
+.worker-mode-btn::after {
+  border: none;
+}
+
+.logout-btn {
+  background: #ffffff;
+  color: #8d949c;
+  font-size: 26rpx;
+  border-radius: 20rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border: 1rpx solid #e3e6eb;
+}
+
+.logout-btn::after {
+  border: none;
+}

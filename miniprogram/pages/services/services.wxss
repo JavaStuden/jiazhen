@@ -1,0 +1,461 @@
+page {
+  background-color: #f7f8fa;
+  min-height: 100vh;
+}
+
+.container {
+  padding: 24rpx 28rpx;
+  box-sizing: border-box;
+}
+
+/* 顶部标题区 */
+.header-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24rpx;
+}
+
+.page-title {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #1a2233;
+  margin-bottom: 6rpx;
+}
+
+.page-subtitle {
+  font-size: 24rpx;
+  color: #8d949c;
+}
+
+/* 搜索与筛选 */
+.search-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.search-bar {
+  flex: 1;
+  height: 80rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
+  border: 1rpx solid #eceef2;
+}
+
+.search-icon {
+  font-size: 30rpx;
+  margin-right: 14rpx;
+  opacity: 0.6;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #1f2329;
+}
+
+.search-placeholder {
+  color: #9aa0a6;
+  font-size: 26rpx;
+}
+
+.filter-btn {
+  height: 80rpx;
+  padding: 0 32rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  margin-left: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
+  border: 1rpx solid #eceef2;
+}
+
+.filter-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #ff6a00;
+}
+
+/* 分类标签横滑 */
+.category-tabs {
+  white-space: nowrap;
+  display: flex;
+  margin-bottom: 24rpx;
+}
+
+.tab-item {
+  display: inline-block;
+  padding: 14rpx 36rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #4e5969;
+  background: #ffffff;
+  border: 1rpx solid #e5e6eb;
+  margin-right: 18rpx;
+  transition: all 0.2s ease;
+}
+
+.tab-item.active {
+  background: #ff6a00;
+  color: #ffffff;
+  border-color: #ff6a00;
+  box-shadow: 0 6rpx 16rpx rgba(255, 106, 0, 0.28);
+}
+
+/* 宣传 Banner 卡片 */
+.service-banner-card {
+  position: relative;
+  width: 100%;
+  height: 190rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  margin-bottom: 30rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.banner-bg {
+  width: 100%;
+  height: 100%;
+}
+
+.banner-content {
+  position: absolute;
+  left: 36rpx;
+  top: 26rpx;
+  right: 36rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.banner-tag {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 4rpx;
+}
+
+.banner-title {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6rpx;
+  letter-spacing: 1rpx;
+}
+
+.banner-desc {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 小节标题 */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1a2233;
+}
+
+.section-hint {
+  font-size: 22rpx;
+  color: #8d949c;
+}
+
+/* 套餐卡片滚动 */
+.package-scroll {
+  white-space: nowrap;
+  display: flex;
+  margin-bottom: 24rpx;
+  padding: 4rpx 2rpx 14rpx;
+}
+
+.package-card {
+  display: inline-block;
+  width: 260rpx;
+  min-width: 260rpx;
+  background: #ffffff;
+  border-radius: 22rpx;
+  padding: 16rpx 18rpx 20rpx;
+  box-sizing: border-box;
+  margin-right: 20rpx;
+  border: 2rpx solid #e6e9ee;
+  position: relative;
+  transition: all 0.2s ease;
+  vertical-align: top;
+}
+
+.package-card.active {
+  border: 3rpx solid #ff6a00;
+  box-shadow: 0 8rpx 24rpx rgba(255, 106, 0, 0.16);
+  background: #ffffff;
+}
+
+.package-thumb {
+  width: 100%;
+  height: 124rpx;
+  border-radius: 14rpx;
+  margin-bottom: 14rpx;
+  display: block;
+}
+
+.package-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2329;
+  display: block;
+  margin-bottom: 6rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.package-specs {
+  font-size: 22rpx;
+  color: #86909c;
+  display: block;
+  margin-bottom: 14rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.package-price-wrap {
+  display: flex;
+  align-items: baseline;
+}
+
+.package-price {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+.package-badge {
+  position: absolute;
+  right: 14rpx;
+  bottom: 16rpx;
+  width: 38rpx;
+  height: 38rpx;
+  border-radius: 50%;
+  background: #ff6a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-text {
+  color: #ffffff;
+  font-size: 22rpx;
+  font-weight: bold;
+}
+
+/* 已选套餐服务内容详情卡片 */
+.detail-card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 32rpx 28rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  border: 1rpx solid #eceef2;
+  margin-bottom: 24rpx;
+}
+
+.detail-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.detail-title-wrap {
+  display: flex;
+  align-items: baseline;
+}
+
+.detail-label {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1f2329;
+}
+
+.detail-name {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #1f2329;
+}
+
+.detail-price {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+/* 规格参数行 */
+.detail-specs-row {
+  display: flex;
+  align-items: center;
+  background: #f8f9fb;
+  border-radius: 18rpx;
+  padding: 18rpx 12rpx;
+  margin-bottom: 26rpx;
+}
+
+.spec-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.spec-label {
+  font-size: 22rpx;
+  color: #86909c;
+  margin-bottom: 6rpx;
+}
+
+.spec-val {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1f2329;
+}
+
+.spec-divider {
+  width: 2rpx;
+  height: 40rpx;
+  background: #e5e8ec;
+}
+
+/* 本套餐服务内容标签 */
+.content-tag-wrap {
+  margin-bottom: 22rpx;
+}
+
+.content-tag {
+  display: inline-block;
+  background: #fff2e8;
+  color: #f46a26;
+  font-size: 24rpx;
+  font-weight: 600;
+  padding: 8rpx 20rpx;
+  border-radius: 12rpx;
+}
+
+/* 四大区域网格列表 */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22rpx 20rpx;
+  margin-bottom: 26rpx;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6rpx;
+}
+
+.item-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #ff6a00;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+}
+
+.item-area {
+  font-size: 27rpx;
+  font-weight: 700;
+  color: #1f2329;
+}
+
+.item-detail {
+  font-size: 23rpx;
+  color: #4e5969;
+  line-height: 1.45;
+  padding-left: 24rpx;
+}
+
+/* 免责声明 */
+.disclaimer-box {
+  background: #fff8f5;
+  border: 1rpx solid #ffe6db;
+  border-radius: 16rpx;
+  padding: 18rpx 22rpx;
+}
+
+.disclaimer-text {
+  font-size: 22rpx;
+  color: #c85e26;
+  line-height: 1.45;
+}
+
+.bottom-placeholder {
+  height: 150rpx;
+}
+
+/* 底部结算悬浮栏 */
+.bottom-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120rpx;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32rpx;
+  box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.price-wrap {
+  display: flex;
+  align-items: baseline;
+}
+
+.total-label {
+  font-size: 24rpx;
+  color: #86909c;
+  margin-right: 12rpx;
+}
+
+.total-amount {
+  font-size: 42rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+.confirm-btn {
+  height: 84rpx;
+  line-height: 84rpx;
+  padding: 0 44rpx;
+  background: linear-gradient(135deg, #ff7e1d 0%, #ff5500 100%);
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 700;
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 20rpx rgba(255, 95, 0, 0.3);
+  margin: 0;
+}
+
+.confirm-btn::after {
+  border: none;
+}

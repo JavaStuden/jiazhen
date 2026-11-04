@@ -1,0 +1,181 @@
+<view class="container">
+  <!-- 顶部三步进度指示器 -->
+  <view class="steps-box">
+    <view class="step-item done">
+      <view class="step-circle done-circle">
+        <text class="step-num">1</text>
+      </view>
+      <text class="step-name">选择服务</text>
+    </view>
+    <view class="step-line active-line"></view>
+    <view class="step-item current">
+      <view class="step-circle active-circle">
+        <text class="step-num active-num">2</text>
+      </view>
+      <text class="step-name active-name">填写需求</text>
+    </view>
+    <view class="step-line"></view>
+    <view class="step-item pending">
+      <view class="step-circle pending-circle">
+        <text class="step-num pending-num">3</text>
+      </view>
+      <text class="step-name pending-name">确认支付</text>
+    </view>
+  </view>
+
+  <!-- 语音下单橙色横幅 -->
+  <view class="voice-banner">
+    <view class="voice-tag">
+      <text class="voice-tag-text">语音</text>
+    </view>
+    <view class="voice-content">
+      <text class="voice-title">按住说出您的服务需求</text>
+      <text class="voice-subtitle">例如：“明天下午三点，80平方米房屋做3小时保洁”</text>
+    </view>
+    <view 
+      class="voice-btn {{isRecording ? 'recording' : ''}}"
+      bindtouchstart="startVoiceRecord"
+      bindtouchend="stopVoiceRecord"
+    >
+      <text class="voice-btn-text">{{isRecording ? '松开识别' : '按住说话'}}</text>
+    </view>
+  </view>
+
+  <!-- 服务规格卡片 -->
+  <view class="card specs-card">
+    <view class="card-header">
+      <text class="card-title">服务规格</text>
+    </view>
+
+    <!-- 服务类别 -->
+    <view class="spec-row">
+      <text class="row-label">服务类别</text>
+      <view class="chip-group">
+        <view 
+          wx:for="{{categories}}" 
+          wx:key="*this"
+          class="chip {{currentCategory === item ? 'active' : ''}}"
+          bindtap="selectCategory"
+          data-cat="{{item}}"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 选择套餐 -->
+    <view class="spec-row arrow-row" bindtap="openPackagePicker">
+      <text class="row-label">选择套餐</text>
+      <view class="row-right">
+        <text class="row-val">{{currentPackage.name}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 面积规格 -->
+    <view class="spec-row">
+      <text class="row-label">面积规格</text>
+      <view class="chip-group">
+        <view 
+          wx:for="{{areaOptions}}" 
+          wx:key="*this"
+          class="chip {{selectedArea === item ? 'active' : ''}}"
+          bindtap="selectArea"
+          data-area="{{item}}"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 服务时长 -->
+    <view class="spec-row">
+      <text class="row-label">服务时长</text>
+      <view class="chip-group">
+        <view 
+          wx:for="{{durationOptions}}" 
+          wx:key="*this"
+          class="chip {{selectedDuration === item ? 'active' : ''}}"
+          bindtap="selectDuration"
+          data-dur="{{item}}"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 上门时间 -->
+    <picker mode="date" value="{{scheduledDate}}" bindchange="onDateChange">
+      <view class="spec-row arrow-row">
+        <text class="row-label">上门时间</text>
+        <view class="row-right">
+          <text class="row-val">{{scheduledDisplayTime}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </picker>
+
+    <!-- 服务地址 -->
+    <view class="spec-row arrow-row" bindtap="editAddress">
+      <text class="row-label">服务地址</text>
+      <view class="row-right">
+        <text class="row-val address-val">{{address}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预算提示卡片 -->
+  <view class="budget-tip-card">
+    <view class="tip-left">
+      <text class="tip-sub">系统根据所选套餐自动生成服务预算</text>
+      <text class="tip-amount">¥{{totalAmount}}.00</text>
+    </view>
+    <view class="tip-right" bindtap="viewPriceDetails">
+      <text class="detail-link">价格明细 ›</text>
+    </view>
+  </view>
+
+  <!-- 本次上门服务内容卡片（核心展示区） -->
+  <view class="card content-card">
+    <view class="content-header-row">
+      <text class="content-title">本次上门服务内容</text>
+      <view class="package-pill-tag">
+        <text class="package-pill-text">{{currentPackage.name}}</text>
+      </view>
+    </view>
+
+    <!-- 6个清晰的清单条目 -->
+    <view class="service-items-grid">
+      <view class="service-bullet" wx:for="{{currentPackage.includedItems}}" wx:key="*this">
+        <view class="orange-dot"></view>
+        <text class="bullet-text">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 不包含条款与履约说明 -->
+    <view class="disclaimer-notice">
+      <text class="disclaimer-line">不包含：高空玻璃、重度除垢、家电拆洗。</text>
+      <text class="disclaimer-line">实际服务按本清单履约，新增内容须沟通确认。</text>
+    </view>
+  </view>
+
+  <!-- 平台安全沟通提醒 -->
+  <view class="security-banner">
+    <view class="security-bar"></view>
+    <text class="security-text">平台沟通与交易更安全，请勿私下交换联系方式。</text>
+  </view>
+
+  <view class="bottom-placeholder"></view>
+
+  <!-- 底部固定栏 -->
+  <view class="bottom-action-bar">
+    <view class="price-wrap">
+      <text class="budget-label">服务预算</text>
+      <text class="budget-val">¥{{totalAmount}}.00</text>
+    </view>
+    <button class="submit-btn" bindtap="submitOrder">
+      下一步 · 确认支付
+    </button>
+  </view>
+</view>

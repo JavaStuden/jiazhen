@@ -1,0 +1,142 @@
+<view class="container">
+  <!-- 顶部标题与说明 -->
+  <view class="header-box">
+    <text class="page-title">选择服务</text>
+    <text class="page-subtitle">选择套餐后自动生成任务金额</text>
+  </view>
+
+  <!-- 搜索栏与筛选 -->
+  <view class="search-section">
+    <view class="search-bar">
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-input" 
+        placeholder="搜索服务项目" 
+        placeholder-class="search-placeholder"
+        value="{{keyword}}"
+        bindinput="onSearchInput"
+      />
+    </view>
+    <view class="filter-btn" bindtap="toggleFilter">
+      <text class="filter-text">筛选</text>
+    </view>
+  </view>
+
+  <!-- 分类 Tabs -->
+  <scroll-view scroll-x class="category-tabs" enable-flex="true">
+    <view 
+      wx:for="{{categories}}" 
+      wx:key="*this"
+      class="tab-item {{currentCategory === item ? 'active' : ''}}"
+      bindtap="switchCategory"
+      data-cat="{{item}}"
+    >
+      {{item}}
+    </view>
+  </scroll-view>
+
+  <!-- 顶部品质宣传 Banner 卡片 -->
+  <view class="service-banner-card">
+    <image class="banner-bg" src="/images/service_banner.jpg" mode="aspectFill"></image>
+    <view class="banner-content">
+      <text class="banner-tag">太禾行标准服务</text>
+      <text class="banner-title">品质家政 · 明码标价</text>
+      <text class="banner-desc">服务内容由平台统一配置</text>
+    </view>
+  </view>
+
+  <!-- 选择服务套餐标题 -->
+  <view class="section-header">
+    <text class="section-title">选择服务套餐</text>
+    <text class="section-hint">面积、时长与内容由平台预设</text>
+  </view>
+
+  <!-- 套餐卡片横排滚动 -->
+  <scroll-view scroll-x class="package-scroll" enable-flex="true">
+    <view 
+      wx:for="{{currentPackages}}" 
+      wx:key="id"
+      class="package-card {{selectedPackage.id === item.id ? 'active' : ''}}"
+      bindtap="selectPackage"
+      data-id="{{item.id}}"
+    >
+      <image class="package-thumb" src="/images/package_thumb.jpg" mode="aspectFill"></image>
+      <text class="package-name">{{item.name}}</text>
+      <text class="package-specs">{{item.area}} · {{item.typeTag}}</text>
+      <view class="package-price-wrap">
+        <text class="package-price">¥{{item.price}}</text>
+      </view>
+
+      <!-- 选中标识角标 -->
+      <view class="package-badge" wx:if="{{selectedPackage.id === item.id}}">
+        <text class="badge-text">选</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 已选套餐服务内容联动卡片 -->
+  <view class="detail-card" wx:if="{{selectedPackage}}">
+    <!-- 套餐主信息与金额 -->
+    <view class="detail-top-row">
+      <view class="detail-title-wrap">
+        <text class="detail-label">已选：</text>
+        <text class="detail-name">{{selectedPackage.name}}</text>
+      </view>
+      <text class="detail-price">¥{{selectedPackage.price}}</text>
+    </view>
+
+    <!-- 规格参数条 -->
+    <view class="detail-specs-row">
+      <view class="spec-col">
+        <text class="spec-label">适用面积</text>
+        <text class="spec-val">{{selectedPackage.area}}</text>
+      </view>
+      <view class="spec-divider"></view>
+      <view class="spec-col">
+        <text class="spec-label">服务时长</text>
+        <text class="spec-val">{{selectedPackage.duration}}</text>
+      </view>
+      <view class="spec-divider"></view>
+      <view class="spec-col">
+        <text class="spec-label">计价单位</text>
+        <text class="spec-val">次</text>
+      </view>
+    </view>
+
+    <!-- 本套餐服务内容小标题 -->
+    <view class="content-tag-wrap">
+      <text class="content-tag">本套餐服务内容</text>
+    </view>
+
+    <!-- 四大区域服务内容明细 -->
+    <view class="content-grid">
+      <view class="grid-item" wx:for="{{selectedPackage.serviceSections}}" wx:key="area">
+        <view class="item-title-row">
+          <view class="item-dot"></view>
+          <text class="item-area">{{item.area}}</text>
+        </view>
+        <text class="item-detail">{{item.detail}}</text>
+      </view>
+    </view>
+
+    <!-- 免责与超标声明 -->
+    <view class="disclaimer-box">
+      <text class="disclaimer-text">
+        {{selectedPackage.disclaimer || '不包含: 高空玻璃、重度除垢、家电拆洗; 超出套餐范围须先与雇主确认。'}}
+      </text>
+    </view>
+  </view>
+
+  <view class="bottom-placeholder"></view>
+
+  <!-- 底部固定栏 -->
+  <view class="bottom-action-bar">
+    <view class="price-wrap">
+      <text class="total-label">合计</text>
+      <text class="total-amount">¥{{selectedPackage ? selectedPackage.price + '.00' : '0.00'}}</text>
+    </view>
+    <button class="confirm-btn" bindtap="confirmAndContinue">
+      确认套餐并继续
+    </button>
+  </view>
+</view>

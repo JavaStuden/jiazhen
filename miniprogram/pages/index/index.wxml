@@ -1,0 +1,99 @@
+<view class="home-page">
+  <!-- 顶部定位与品牌导航 -->
+  <view class="top-nav">
+    <view class="brand-row" bindtap="goToLogin">
+      <image class="brand-logo" src="/images/logo.jpg" mode="aspectFit"></image>
+      <view class="brand-text-wrap">
+        <text class="brand-title">太禾行</text>
+        <text class="brand-sub">专业服务 · 安心到家</text>
+      </view>
+    </view>
+    <view class="city-pill" bindtap="switchCity">
+      <text class="city-icon">📍</text>
+      <text class="city-name">{{currentCity}}</text>
+      <text class="city-arrow">▾</text>
+    </view>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-box" bindtap="goServices">
+    <text class="search-icon">🔍</text>
+    <text class="search-text">搜索保洁、养老护理、上门维修</text>
+    <view class="search-btn">搜索</view>
+  </view>
+
+  <!-- 首页大 Banner -->
+  <view class="main-banner" bindtap="goServices">
+    <view class="banner-badge">专业认证 · 履约保障</view>
+    <view class="banner-heading">找家政，找照护<br/>太禾行更安心</view>
+    <button class="banner-action-btn">立即选服务 ›</button>
+  </view>
+
+  <!-- 金刚区 8 大核心服务入口 -->
+  <view class="grid-categories">
+    <view 
+      wx:for="{{categories}}" 
+      wx:key="name" 
+      class="cat-item"
+      bindtap="onCategoryClick"
+      data-name="{{item.name}}"
+    >
+      <view class="cat-icon-wrap" style="background: {{item.bg}}">
+        <text class="cat-icon">{{item.icon}}</text>
+      </view>
+      <text class="cat-label">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 新人专享优惠券 Banner -->
+  <view class="coupon-banner" bindtap="claimCoupon">
+    <view class="coupon-left">
+      <view class="coupon-tag">新人专享</view>
+      <text class="coupon-title">服务优惠券 ¥20</text>
+      <text class="coupon-desc">下单即可抵扣服务金额</text>
+    </view>
+    <button class="coupon-btn">立即领取</button>
+  </view>
+
+  <!-- 推荐服务明码标价区域 -->
+  <view class="section-bar">
+    <view class="section-left">
+      <view class="section-indicator"></view>
+      <text class="section-heading">推荐服务</text>
+    </view>
+    <text class="section-more" bindtap="goServices">全部服务 ›</text>
+  </view>
+
+  <!-- 推荐套餐卡片列表 -->
+  <view class="recommend-list">
+    <view 
+      wx:for="{{recommendList}}" 
+      wx:key="id" 
+      class="recommend-card"
+      bindtap="goPackageDetail"
+      data-id="{{item.id}}"
+    >
+      <image class="card-thumb" src="/images/package_thumb.jpg" mode="aspectFill"></image>
+      <view class="card-body">
+        <view class="card-title-row">
+          <text class="card-title">{{item.name}}</text>
+        </view>
+        <view class="tags-row">
+          <text class="tag-pill" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="card-bottom">
+          <view class="price-wrap">
+            <text class="currency">¥</text>
+            <text class="amount">{{item.price}}</text>
+            <text class="unit">/次</text>
+          </view>
+          <button class="order-btn">选套餐</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer-tips">
+    <text>实名认证 · 平台担保 · 全程留痕</text>
+  </view>
+</view>

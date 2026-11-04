@@ -1,0 +1,349 @@
+page {
+  background-color: #f7f8fa;
+  min-height: 100vh;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* 顶部实景头图 */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 480rpx;
+  overflow: hidden;
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.6) 80%, #ffffff 100%);
+}
+
+.brand-header {
+  position: absolute;
+  top: 90rpx;
+  left: 48rpx;
+  right: 48rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title-wrap {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.brand-logo {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 50%;
+  margin-right: 18rpx;
+  border: 3rpx solid #ffffff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.brand-name {
+  font-size: 54rpx;
+  font-weight: 800;
+  color: #1a2233;
+  letter-spacing: 2rpx;
+}
+
+.brand-subtitle {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #555e6d;
+  margin-left: 86rpx;
+  margin-bottom: 24rpx;
+  letter-spacing: 1rpx;
+}
+
+.brand-slogan-wrap {
+  margin-left: 86rpx;
+}
+
+.brand-slogan {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #d85c18;
+  font-style: italic;
+  letter-spacing: 1.5rpx;
+  text-shadow: 0 1rpx 2rpx rgba(255, 255, 255, 0.8);
+}
+
+/* 浮层表单卡片 */
+.card-sheet {
+  position: relative;
+  margin-top: -50rpx;
+  background: #ffffff;
+  border-radius: 44rpx 44rpx 0 0;
+  padding: 48rpx 40rpx 60rpx;
+  box-shadow: 0 -10rpx 30rpx rgba(0, 0, 0, 0.05);
+  flex: 1;
+}
+
+/* 输入框通用项 */
+.input-item {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border: 2rpx solid #e6e9ee;
+  border-radius: 20rpx;
+  height: 104rpx;
+  padding: 0 28rpx;
+  margin-bottom: 24rpx;
+  transition: all 0.2s ease;
+}
+
+.input-item:focus-within {
+  border-color: #ff6a00;
+  background: #ffffff;
+  box-shadow: 0 0 0 4rpx rgba(255, 106, 0, 0.1);
+}
+
+.input-icon {
+  margin-right: 20rpx;
+  display: flex;
+  align-items: center;
+}
+
+.icon-sym {
+  font-size: 36rpx;
+  opacity: 0.85;
+}
+
+.input-control {
+  flex: 1;
+  font-size: 30rpx;
+  color: #1f2329;
+  height: 100%;
+}
+
+.placeholder {
+  color: #9aa0a6;
+  font-size: 28rpx;
+}
+
+.input-clear {
+  padding: 10rpx 14rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-icon {
+  width: 36rpx;
+  height: 36rpx;
+  line-height: 34rpx;
+  text-align: center;
+  background: #dadce0;
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 22rpx;
+}
+
+.code-divider {
+  width: 2rpx;
+  height: 40rpx;
+  background: #e2e4e8;
+  margin: 0 20rpx;
+}
+
+.code-btn {
+  background: transparent;
+  color: #ff6a00;
+  font-size: 28rpx;
+  font-weight: 500;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  border: none;
+}
+
+.code-btn::after {
+  border: none;
+}
+
+.code-btn.disabled {
+  color: #9aa0a6;
+}
+
+/* 登录/注册按钮 */
+.login-btn {
+  margin-top: 16rpx;
+  margin-bottom: 40rpx;
+  height: 102rpx;
+  line-height: 102rpx;
+  background: linear-gradient(135deg, #ff7e1d 0%, #ff5500 100%);
+  color: #ffffff;
+  font-size: 34rpx;
+  font-weight: 700;
+  border-radius: 22rpx;
+  box-shadow: 0 12rpx 28rpx rgba(255, 95, 0, 0.32);
+  letter-spacing: 2rpx;
+}
+
+.login-btn:active {
+  transform: scale(0.985);
+  opacity: 0.95;
+}
+
+/* 角色选择并列双卡片 */
+.role-grid {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 44rpx;
+}
+
+.role-card {
+  position: relative;
+  width: 48%;
+  background: #ffffff;
+  border: 2rpx solid #e3e6eb;
+  border-radius: 24rpx;
+  padding: 34rpx 20rpx 28rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.25s ease;
+}
+
+.role-card.active {
+  background: #fff8f3;
+  border-color: #ff6a00;
+  box-shadow: 0 8rpx 24rpx rgba(255, 106, 0, 0.12);
+}
+
+.role-card.worker-card.active {
+  background: #f1faf5;
+  border-color: #19b37b;
+  box-shadow: 0 8rpx 24rpx rgba(25, 179, 123, 0.12);
+}
+
+.corner-check {
+  position: absolute;
+  top: 14rpx;
+  right: 14rpx;
+  width: 38rpx;
+  height: 38rpx;
+  background: #ff6a00;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.worker-corner-check {
+  background: #19b37b;
+}
+
+.check-mark {
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.role-avatar {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18rpx;
+}
+
+.customer-avatar {
+  background: #ffebe0;
+}
+
+.worker-avatar {
+  background: #e2f5ec;
+}
+
+.avatar-icon {
+  font-size: 46rpx;
+}
+
+.role-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1a2233;
+  margin-bottom: 10rpx;
+}
+
+.role-desc {
+  font-size: 23rpx;
+  color: #7b8390;
+  text-align: center;
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+/* 底部协议 */
+.agreement-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28rpx;
+}
+
+.checkbox {
+  width: 34rpx;
+  height: 34rpx;
+  border-radius: 50%;
+  border: 2rpx solid #c4c8d0;
+  margin-right: 14rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+}
+
+.checkbox.checked {
+  background: #ff6a00;
+  border-color: #ff6a00;
+}
+
+.check-icon {
+  color: #ffffff;
+  font-size: 22rpx;
+  font-weight: bold;
+}
+
+.agreement-text {
+  font-size: 24rpx;
+  color: #ff6a00;
+}
+
+.link {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* 快速体验 */
+.guest-entry {
+  text-align: center;
+  padding: 10rpx 0;
+}
+
+.guest-text {
+  font-size: 26rpx;
+  color: #8f959e;
+}

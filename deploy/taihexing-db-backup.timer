@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily Taihexing database backup
+
+[Timer]
+OnCalendar=*-*-* 02:30:00
+Persistent=true
+RandomizedDelaySec=15m
+Unit=taihexing-db-backup.service
+
+[Install]
+WantedBy=timers.target
