@@ -1,82 +1,108 @@
 const app = getApp();
+const { request } = require('../../utils/request');
 
 Page({
   data: {
-    bellEnabled: true,
-    grabOrders: [
-      {
-        id: 201,
-        title: '3小时深度保洁',
-        category: '家政保洁',
-        netIncome: 156,
-        totalPrice: 168,
-        platformFee: 12,
-        distance: '1.2km',
-        time: '今天 14:30 - 17:30',
-        address: '渝北区新月路（接单后显示门牌号）',
-        employerCredit: 98,
-        orderCount: 32
-      },
-      {
-        id: 202,
-        title: '居家养老照护·4小时',
-        category: '养老护理',
-        netIncome: 209,
-        totalPrice: 220,
-        platformFee: 11,
-        distance: '2.1km',
-        time: '今天 13:00 - 17:00',
-        address: '渝北区金开大道（接单后显示门牌号）',
-        employerCredit: 96,
-        orderCount: 15
-      },
-      {
-        id: 203,
-        title: '三甲医院尊享陪诊·4小时',
-        category: '陪医陪诊',
-        netIncome: 368,
-        totalPrice: 399,
-        platformFee: 31,
-        distance: '3.5km',
-        time: '明天 08:30 - 12:30',
-        address: '两江新区第一人民医院（院内陪同）',
-        employerCredit: 100,
-        orderCount: 8
-      }
-    ]
+    bottomTab: 'hall', // 'hall' (P3) | 'orders' (P9) | 'mine' (P4)
+    filterChip: '智能匹配',
+    orderStatusTab: '待上门',
+    grabOrders: [],
+    serviceOrders: [],
+    workerName: '服务人员',
+    activeOrder: null,
+    currentLocation: '尚未获取定位',
+    loadError: ''
   },
 
-  toggleBell() {
-    this.setData({ bellEnabled: !this.data.bellEnabled });
-    wx.showToast({
-      title: this.data.bellEnabled ? '听单提醒已开启' : '听单已静音',
-      icon: 'none'
-    });
+  onShow() { this.loadWorkerOrders(); },
+
+  loadWorkerOrders() {
+    Promise.all([request('/orders/available'), request('/orders'), request('/auth/me')]).then(([available, assigned, me]) => {
+      this.setData({
+        loadError: '', workerName: me.displayName || '服务人员',
+        grabOrders: available.map(order => ({
+          ...order, title: order.serviceName, price: order.amount, time: order.scheduledAt,
+          distance: order.addressLabel, matchType: '公共订单', matchClass: 'blue-tag', tags: [],
+          footNote: '接单后查看完整地址和联系方式', btnText: '查看并抢单'
+        })),
+        serviceOrders: assigned.map(order => ({
+          ...order, title: order.serviceName, time: order.scheduledAt, address: order.address,
+          customer: order.customerName, incomeLabel: '订单金额', incomeVal: `¥${order.amount || 0}`
+        })),
+        activeOrder: assigned.find(order => ['待上门', '服务中', '待结算'].includes(order.status)) || null
+      });
+    }).catch(error => this.setData({ loadError: error.message || '订单加载失败', grabOrders: [], serviceOrders: [] }));
+  },
+
+  switchBottomTab(e) {
+    const tab = e.currentTarget.dataset.tab;
+    if (tab === 'messages') {
+      wx.navigateTo({ url: '/pages/messages/messages' });
+      return;
+    }
+    const titles = {
+      hall: '抢单大厅',
+      orders: '服务单',
+      mine: '服务工作台 · 我的'
+    };
+    wx.setNavigationBarTitle({ title: titles[tab] || '服务人员端' });
+    this.setData({ bottomTab: tab });
+  },
+
+  selectFilterChip(e) {
+    this.setData({ filterChip: e.currentTarget.dataset.chip });
+  },
+
+  selectOrderStatusTab(e) {
+    this.setData({ orderStatusTab: e.currentTarget.dataset.status });
+  },
+
+  refreshLocation() {
+    wx.getLocation({ type: 'gcj02', success: location => {
+      this.setData({ currentLocation: `${location.latitude.toFixed(5)}, ${location.longitude.toFixed(5)}` });
+    }, fail: () => wx.showToast({ title: '无法获取定位，请检查授权', icon: 'none' }) });
   },
 
   switchToCustomer() {
+    wx.removeStorageSync('accessToken');
+    wx.removeStorageSync('isLoggedIn');
+    app.globalData.accessToken = '';
     wx.setStorageSync('role', 'customer');
     if (app && app.globalData) {
       app.globalData.role = 'customer';
     }
-    wx.switchTab({ url: '/pages/index/index' });
+    wx.navigateTo({ url: '/pages/login/login?role=customer' });
   },
 
-  grabOrder(e) {
-    const order = e.currentTarget.dataset.order;
-    wx.showModal({
-      title: '抢单确认',
-      content: `项目：${order.title}\n预计到手收入：¥${order.netIncome}\n服务地址：${order.address}\n\n抢单成功后，请按时到达并完成定位打卡与现场拍照存证。`,
-      confirmText: '确认抢单',
-      confirmColor: '#ff6a00',
-      success: (res) => {
-        if (res.confirm) {
-          wx.showToast({
-            title: '抢单成功！请准时履约',
-            icon: 'success'
-          });
-        }
-      }
+  goWorkerOps(e) {
+    const sec = e.currentTarget.dataset.sec;
+    const orderId = e.currentTarget.dataset.orderId;
+    wx.navigateTo({
+      url: `/pages/worker-ops/worker-ops?section=${sec}${orderId ? `&orderId=${orderId}` : ''}`
     });
+  },
+
+  goPartnerOrInvite(e) {
+    const sec = e.currentTarget.dataset.sec;
+    wx.navigateTo({
+      url: `/pages/user-center/user-center?section=${sec}&role=worker`
+    });
+  },
+
+  goChat() {
+    if (!this.data.activeOrder) return wx.showToast({ title: '暂无可沟通订单', icon: 'none' });
+    wx.navigateTo({ url: `/pages/messages/messages?tab=chat&orderId=${this.data.activeOrder.id}` });
+  },
+
+  goComplaint() {
+    wx.navigateTo({
+      url: '/pages/after-sales/after-sales?mode=complaint'
+    });
+  },
+
+  callCustomer(e) {
+    const phone = e.currentTarget.dataset.order && e.currentTarget.dataset.order.phone;
+    if (!phone) return wx.showToast({ title: '该订单暂未提供联系电话', icon: 'none' });
+    wx.makePhoneCall({ phoneNumber: phone }).catch(() => {});
   }
 });

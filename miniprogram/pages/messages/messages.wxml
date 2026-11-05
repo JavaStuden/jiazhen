@@ -1,0 +1,166 @@
+<view class="container">
+  <!-- 视图一：消息中心（对应用户端 PDF 第 14 页） -->
+  <block wx:if="{{tab === 'list'}}">
+    <view class="top-bar">
+      <view class="brand-left">
+        <image class="b-logo" src="/images/logo.jpg" mode="aspectFit"></image>
+        <view>
+          <text class="b-name">太禾行</text>
+          <text class="b-sub">消息中心</text>
+        </view>
+      </view>
+      <text class="read-all" bindtap="markAllRead">全部已读</text>
+    </view>
+
+    <!-- 四宫格分类通知 -->
+    <view class="card cat-grid">
+      <view class="cat-col" wx:for="{{categories}}" wx:key="name">
+        <text class="cat-ico">{{item.icon}}</text>
+        <text class="cat-lbl">{{item.name}}</text>
+        <view class="cat-badge" wx:if="{{item.badge > 0}}" style="background: {{item.color}}">
+          {{item.badge}}
+        </view>
+      </view>
+    </view>
+
+    <view class="sec-row">
+      <text class="sec-title">最近消息</text>
+      <view class="sec-filter">全部消息 ▾</view>
+    </view>
+
+    <view class="msg-list">
+      <view 
+        class="card msg-card" 
+        wx:for="{{messageList}}" 
+        wx:key="id"
+        bindtap="onMessageClick"
+        data-item="{{item}}"
+      >
+        <view class="m-icon" style="background: {{item.bg}}">{{item.icon}}</view>
+        <view class="m-body">
+          <view class="m-top">
+            <text class="m-title">{{item.title}}</text>
+            <text class="m-time">{{item.time}}</text>
+          </view>
+          <view class="m-bottom">
+            <text class="m-desc">{{item.desc}}</text>
+            <view class="m-badge" wx:if="{{item.unread > 0}}">{{item.unread}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <button class="history-btn" bindtap="openChat">进入平台三方沟通室 ›</button>
+  </block>
+
+  <!-- 视图二：平台三方沟通聊天室（完全还原用户端 PDF 第 15 页） -->
+  <block wx:else>
+    <view class="chat-sub-top">
+      <text class="back-link" bindtap="backToList">‹ 返回消息列表</text>
+      <text class="order-no-txt">订单 {{orderNo}}</text>
+    </view>
+
+    <!-- 顶部三方参与人卡片 -->
+    <view class="card participants-card">
+      <view class="part-item">
+        <image class="part-avatar" src="/images/package_thumb.jpg" mode="aspectFill"></image>
+        <view>
+          <text class="part-role">雇主</text>
+          <text class="part-name">{{order.customerName || '雇主'}}</text>
+        </view>
+      </view>
+      <view class="part-item">
+        <image class="part-avatar" src="/images/login_hero.jpg" mode="aspectFill"></image>
+        <view>
+          <text class="part-role">服务人员</text>
+          <text class="part-name">{{order.providerName || '服务人员'}}</text>
+        </view>
+      </view>
+      <view class="part-item">
+        <image class="part-avatar" src="/images/logo.jpg" mode="aspectFit"></image>
+        <view>
+          <text class="part-role">平台沟通</text>
+          <text class="part-name">订单留言</text>
+        </view>
+      </view>
+      <text class="online-status">订单沟通记录</text>
+    </view>
+
+    <view class="chat-time-div" wx:if="{{!orderId}}">请从具体订单进入沟通</view>
+
+    <!-- 消息气泡流 -->
+    <view class="chat-stream">
+      <view 
+        wx:for="{{chatMessages}}" 
+        wx:key="id" 
+        class="msg-row {{item.sender === 'customer' ? 'right-row' : 'left-row'}}"
+      >
+        <image 
+          wx:if="{{item.sender !== 'customer'}}" 
+          class="chat-avatar" 
+          src="{{item.sender === 'agent' ? '/images/logo.jpg' : '/images/login_hero.jpg'}}" 
+          mode="aspectFill"
+        ></image>
+
+        <view class="bubble-col">
+          <text class="sender-label" wx:if="{{item.sender !== 'customer'}}">{{item.name}}</text>
+          <view class="chat-bubble {{item.sender === 'customer' ? 'orange-bubble' : 'white-bubble'}}">
+            <text>{{item.text}}</text>
+          </view>
+
+          <!-- 内嵌服务时长调整确认卡片（对应 PDF 第 15 页） -->
+          <view class="adjust-card" wx:if="{{item.hasAnomalyCard}}">
+            <view class="adj-head">
+              <text class="adj-title">🕒 服务时长调整</text>
+              <text class="adj-pill">{{anomalyStatusText}}</text>
+            </view>
+            <view class="adj-row">
+              <text class="adj-lbl">原服务时长</text>
+              <text class="adj-val">{{order.durationLabel}}</text>
+            </view>
+            <view class="adj-row">
+              <text class="adj-lbl">调整后时长</text>
+              <text class="adj-val">{{order.anomalyTargetDuration}}</text>
+            </view>
+            <view class="adj-row">
+              <text class="adj-lbl">调整后金额</text>
+              <text class="adj-price">{{order.anomalyTargetAmount ? '¥' + order.anomalyTargetAmount : '待审核'}}</text>
+            </view>
+            <view class="adj-actions" wx:if="{{!anomalyHandled}}">
+              <button class="adj-reject" bindtap="handleAnomalyInChat" data-agreed="false">拒绝调整</button>
+              <button class="adj-agree" bindtap="handleAnomalyInChat" data-agreed="true">同意并继续</button>
+            </view>
+          </view>
+        </view>
+
+        <image 
+          wx:if="{{item.sender === 'customer'}}" 
+          class="chat-avatar right-avatar" 
+          src="/images/package_thumb.jpg" 
+          mode="aspectFill"
+        ></image>
+      </view>
+    </view>
+
+    <view class="chat-warn-bar">
+      🛡️ 请勿发送手机号、微信或线下收款信息
+    </view>
+
+    <view class="bottom-placeholder"></view>
+
+    <!-- 底部聊天输入栏 -->
+    <view class="chat-input-bar">
+      <view class="plus-circle">+</view>
+      <input 
+        class="chat-input" 
+        placeholder="输入消息..." 
+        value="{{chatInput}}"
+        bindinput="onChatInput"
+        confirm-type="send"
+        bindconfirm="sendChatMessage"
+      />
+      <view class="mic-circle">🎙️</view>
+      <button class="send-btn" bindtap="sendChatMessage">发送</button>
+    </view>
+  </block>
+</view>

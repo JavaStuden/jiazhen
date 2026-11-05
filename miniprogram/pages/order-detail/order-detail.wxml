@@ -1,0 +1,218 @@
+<view class="container">
+  <view class="top-order-no">订单号 {{order.orderNo}}</view>
+
+  <!-- 模式 A：待接单详情（对应用户端 PDF 第 12 页） -->
+  <block wx:if="{{isPendingMode}}">
+    <view class="card pending-hero">
+      <text class="pending-badge">🕒 等待服务人员接单</text>
+      <text class="pending-title">正在为您匹配合适的服务人员</text>
+      <text class="pending-sub">预计10分钟内完成匹配</text>
+
+      <view class="p-steps">
+        <view class="p-step">
+          <view class="p-circle done">✓</view>
+          <text class="p-lbl">需求已发布</text>
+        </view>
+        <view class="p-line active"></view>
+        <view class="p-step">
+          <view class="p-circle current">2</view>
+          <text class="p-lbl orange-text">智能匹配</text>
+        </view>
+        <view class="p-line"></view>
+        <view class="p-step">
+          <view class="p-circle">3</view>
+          <text class="p-lbl">服务员接单</text>
+        </view>
+        <view class="p-line"></view>
+        <view class="p-step">
+          <view class="p-circle">4</view>
+          <text class="p-lbl">等待上门</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="srv-head">
+        <view class="srv-icon">🧡</view>
+        <view class="srv-main">
+          <text class="srv-title">{{order.serviceName}}</text>
+          <view class="srv-tags">
+            <text class="srv-tag">实名认证</text>
+            <text class="srv-tag">履约保障</text>
+          </view>
+        </view>
+      </view>
+      <view class="srv-line">🕒 {{order.scheduledAt}}</view>
+      <view class="srv-line">📍 {{order.address}}</view>
+      <view class="srv-line">📋 {{order.note || '按平台标准套餐清单履约'}}</view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">费用明细</view>
+      <view class="fee-row">
+        <text>标准服务金额</text>
+        <text>¥{{order.amount}}.00</text>
+      </view>
+      <view class="fee-row">
+        <text>服务优惠券</text>
+        <text class="orange-text">-¥{{order.couponDiscount || 0}}.00</text>
+      </view>
+      <view class="fee-row">
+        <text>技术服务费 <text class="mini-pill">平台独立设置</text></text>
+        <text>¥{{order.technicalFee || 0}}</text>
+      </view>
+      <view class="fee-total">
+        <text class="total-lbl">本次应付</text>
+        <text class="total-val">¥{{order.payableAmount || 0}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">匹配规则</view>
+      <view class="rule-cols">
+        <view class="rule-col">
+          <text class="rule-check">✓</text>
+          <text class="rule-txt">距离优先</text>
+        </view>
+        <view class="rule-col">
+          <text class="rule-check">✓</text>
+          <text class="rule-txt">信用分≥80</text>
+        </view>
+        <view class="rule-col">
+          <text class="rule-check">✓</text>
+          <text class="rule-txt">专业技能核验</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="security-tip">🛡️ 平台担保交易，请勿私下交换联系方式</view>
+
+    <view class="bottom-placeholder"></view>
+    <view class="bottom-bar dual-bar">
+      <button class="outline-btn" bindtap="cancelOrder">取消订单</button>
+      <button class="primary-btn main-bar-btn" bindtap="urgeMatching">催促匹配</button>
+    </view>
+  </block>
+
+  <!-- 模式 B：订单履约中详情（完全还原用户端 PDF 第 9 页） -->
+  <block wx:else>
+    <!-- 顶部状态与倒计时 -->
+    <view class="card fulfill-hero">
+      <view class="f-top">
+        <text class="f-status">{{order.status === '已完成' ? '服务已完成' : '服务进行中'}}</text>
+        <view class="f-timer">{{order.status === '已完成' ? '服务已完成' : order.status}}</view>
+      </view>
+      <text class="f-headline">服务人员已到达并打卡</text>
+
+      <view class="timeline-bar">
+        <view class="tl-node">
+          <view class="tl-dot green"></view>
+          <text class="tl-name green-txt">已接单</text>
+          <text class="tl-time">{{order.updatedAt || '--'}}</text>
+        </view>
+        <view class="tl-line green-line"></view>
+        <view class="tl-node">
+          <view class="tl-dot green"></view>
+          <text class="tl-name green-txt">已到达</text>
+          <text class="tl-time">{{order.checkinTime || '--:--'}}</text>
+        </view>
+        <view class="tl-line orange-line"></view>
+        <view class="tl-node">
+          <view class="tl-dot orange"></view>
+          <text class="tl-name orange-txt">服务中</text>
+          <text class="tl-time">{{order.startServiceTime || '--:--'}}</text>
+        </view>
+        <view class="tl-line"></view>
+        <view class="tl-node">
+          <view class="tl-dot"></view>
+          <text class="tl-name">待确认</text>
+          <text class="tl-time">--:--</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 服务人员信息卡 -->
+    <view class="card worker-info-card">
+      <image class="w-avatar" src="/images/package_thumb.jpg" mode="aspectFill" bindtap="goProviderDetail"></image>
+      <view class="w-mid" bindtap="goProviderDetail">
+        <view class="w-name-row">
+          <text class="w-name">{{order.providerName || '服务人员待指派'}}</text>
+        <text class="w-gold" wx:if="{{order.providerId}}">服务人员</text>
+        </view>
+        <text class="w-sub">{{order.providerId ? '已接单' : '等待接单'}}</text>
+        <view class="w-badges">
+          <text class="w-badge green-b">身份核验</text>
+          <text class="w-badge orange-b" wx:if="{{order.providerId}}">已指派</text>
+        </view>
+      </view>
+      <view class="w-btns">
+        <button class="w-chat-btn" bindtap="goThreePartyChat">在线沟通</button>
+        <button class="w-call-btn" bindtap="callProvider">联系服务员</button>
+      </view>
+    </view>
+
+    <!-- 到家打卡记录 -->
+    <view class="card">
+      <view class="card-title">到家打卡记录</view>
+      <view class="checkin-item">
+        <view class="ci-icon">✓</view>
+        <view class="ci-body">
+          <text class="ci-title">已到达服务地址</text>
+          <text class="ci-sub">{{order.checkinTime || '尚未打卡'}} · {{order.checkinAddress || ''}}</text>
+        </view>
+        <text class="ci-tag">{{order.checkinTime ? '已记录' : '等待打卡'}}</text>
+      </view>
+      <view class="checkin-item last-ci">
+        <view class="ci-icon">✓</view>
+        <view class="ci-body">
+          <text class="ci-title">开始服务</text>
+          <text class="ci-sub">{{order.startServiceTime || '尚未开始'}}</text>
+        </view>
+        <text class="ci-tag">过程留痕</text>
+      </view>
+    </view>
+
+    <!-- 服务时长异常待确认卡片（对应 PDF 第 9 页核心交互） -->
+    <view class="anomaly-card" wx:if="{{order.anomalyStatus !== '无'}}">
+      <view class="anom-icon">⚠️</view>
+      <view class="anom-body">
+        <text class="anom-title">服务时长异常{{order.anomalyStatus}}</text>
+        <text class="anom-desc">{{order.anomalyReason || '原订单1小时，现场评估需3小时，服务人员已在到场后10分钟内上报。'}}</text>
+        <text class="anom-price">调整后服务金额：¥{{order.anomalyTargetAmount || order.amount}}</text>
+      </view>
+      <view class="anom-btns" wx:if="{{order.anomalyStatus === '待确认'}}">
+        <button class="anom-reject" bindtap="handleAnomalyDecision" data-agreed="false">拒绝调整</button>
+        <button class="anom-agree" bindtap="handleAnomalyDecision" data-agreed="true">同意调整</button>
+      </view>
+      <view class="anom-status-pill" wx:else>{{order.anomalyStatus}}</view>
+    </view>
+
+    <!-- 平台三方沟通入口 -->
+    <view class="card chat-entry-card" bindtap="goThreePartyChat">
+      <view>
+        <text class="chat-entry-title">平台三方沟通</text>
+        <text class="chat-entry-sub">平台客服可介入协商并保留沟通记录</text>
+      </view>
+      <text class="chat-new-msg">2条新消息 ›</text>
+    </view>
+
+    <!-- 底部三快捷操作按钮（取消订单 / 售后申请 / 廉政举报） -->
+    <view class="triple-actions">
+      <button class="t-btn" bindtap="cancelOrder">取消订单</button>
+      <button class="t-btn" bindtap="goAfterSales">售后申请</button>
+      <button class="t-btn" bindtap="goComplaint">廉政举报</button>
+    </view>
+
+    <view class="bottom-placeholder"></view>
+
+    <view class="bottom-bar">
+      <view class="bottom-left-tip">
+        <text class="tip-sm">服务完成后</text>
+        <text class="tip-lg">请确认服务结果</text>
+      </view>
+      <button class="primary-btn confirm-done-btn" bindtap="confirmCompleteService">
+        确认完成服务
+      </button>
+    </view>
+  </block>
+</view>

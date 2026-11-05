@@ -1,6 +1,7 @@
 App({
   globalData: {
     apiBaseUrl: 'https://voice.yourunshi.online/taihexing/api/public',
+    accessToken: '',
     role: 'customer',
     selectedPackage: null,
     userInfo: {
@@ -11,6 +12,7 @@ App({
   },
 
   onLaunch() {
+    this.globalData.accessToken = wx.getStorageSync('accessToken') || '';
     const savedRole = wx.getStorageSync('role');
     if (!savedRole) {
       wx.setStorageSync('role', 'customer');

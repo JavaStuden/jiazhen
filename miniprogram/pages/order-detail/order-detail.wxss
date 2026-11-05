@@ -1,0 +1,673 @@
+page {
+  background-color: #f7f8fa;
+  min-height: 100vh;
+}
+
+.container {
+  padding: 16rpx 28rpx 60rpx;
+}
+
+.top-order-no {
+  text-align: center;
+  font-size: 24rpx;
+  color: #8d949c;
+  margin-bottom: 20rpx;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 28rpx;
+  margin-bottom: 22rpx;
+  border: 1rpx solid #eceef2;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.03);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1f2329;
+  margin-bottom: 20rpx;
+}
+
+/* 待接单模式（PDF 第 12 页） */
+.pending-hero {
+  background: linear-gradient(135deg, #fffaf6 0%, #fff1e6 100%);
+}
+
+.pending-badge {
+  font-size: 24rpx;
+  color: #ff6a00;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.pending-title {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #1f2329;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.pending-sub {
+  font-size: 25rpx;
+  color: #8d949c;
+  display: block;
+  margin-bottom: 30rpx;
+}
+
+.p-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.p-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.p-circle {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  border: 2rpx solid #c4c8d0;
+  color: #8d949c;
+  font-size: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8rpx;
+  background: #ffffff;
+}
+
+.p-circle.done {
+  border-color: #ff6a00;
+  color: #ff6a00;
+}
+
+.p-circle.current {
+  background: #ff6a00;
+  border-color: #ff6a00;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.p-lbl {
+  font-size: 22rpx;
+  color: #646a73;
+}
+
+.p-line {
+  flex: 1;
+  height: 2rpx;
+  background: #dcdfe6;
+  margin: -28rpx 10rpx 0;
+}
+
+.p-line.active {
+  background: #ff6a00;
+}
+
+.srv-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.srv-icon {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: #fff4ec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  margin-right: 20rpx;
+}
+
+.srv-title {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #1f2329;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.srv-tags {
+  display: flex;
+  gap: 10rpx;
+}
+
+.srv-tag {
+  background: #fff2e8;
+  color: #ff6a00;
+  font-size: 20rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+}
+
+.srv-line {
+  font-size: 26rpx;
+  color: #4e5969;
+  margin-top: 12rpx;
+}
+
+.fee-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 26rpx;
+  color: #4e5969;
+  padding: 12rpx 0;
+}
+
+.mini-pill {
+  background: #fff2e8;
+  color: #ff6a00;
+  font-size: 20rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  margin-left: 8rpx;
+}
+
+.fee-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 18rpx;
+  margin-top: 10rpx;
+  border-top: 1rpx solid #f0f2f5;
+}
+
+.total-lbl {
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.total-val {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+.rule-cols {
+  display: flex;
+  justify-content: space-around;
+}
+
+.rule-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.rule-check {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 2rpx solid #ff6a00;
+  color: #ff6a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+}
+
+.rule-txt {
+  font-size: 24rpx;
+  color: #4e5969;
+}
+
+.security-tip {
+  background: #fff8f3;
+  color: #8b5a3d;
+  font-size: 23rpx;
+  padding: 18rpx 24rpx;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+/* 履约中模式（PDF 第 9 页） */
+.f-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.f-status {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #ff6a00;
+}
+
+.f-timer {
+  background: #fff4ec;
+  color: #b85d19;
+  font-size: 22rpx;
+  font-weight: 700;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+}
+
+.f-headline {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #1f2329;
+  display: block;
+  margin-bottom: 28rpx;
+}
+
+.timeline-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.tl-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 110rpx;
+}
+
+.tl-dot {
+  width: 22rpx;
+  height: 22rpx;
+  border-radius: 50%;
+  background: #dcdfe6;
+  margin-bottom: 10rpx;
+}
+
+.tl-dot.green {
+  background: #19b37b;
+}
+
+.tl-dot.orange {
+  background: #ff6a00;
+}
+
+.tl-name {
+  font-size: 23rpx;
+  color: #8d949c;
+}
+
+.green-txt {
+  color: #19b37b;
+  font-weight: 600;
+}
+
+.orange-txt, .orange-text {
+  color: #ff6a00;
+  font-weight: 700;
+}
+
+.tl-time {
+  font-size: 20rpx;
+  color: #8d949c;
+  margin-top: 4rpx;
+}
+
+.tl-line {
+  flex: 1;
+  height: 3rpx;
+  background: #e5e6eb;
+  margin-top: 10rpx;
+}
+
+.green-line {
+  background: #19b37b;
+}
+
+.orange-line {
+  background: #ff6a00;
+}
+
+/* 服务人员卡片 */
+.worker-info-card {
+  display: flex;
+  align-items: center;
+}
+
+.w-avatar {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.w-mid {
+  flex: 1;
+}
+
+.w-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 6rpx;
+}
+
+.w-name {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #1f2329;
+}
+
+.w-gold {
+  background: #fff2e8;
+  color: #d46b08;
+  font-size: 20rpx;
+  font-weight: 700;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.w-sub {
+  font-size: 22rpx;
+  color: #8d949c;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.w-badges {
+  display: flex;
+  gap: 10rpx;
+}
+
+.w-badge {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.green-b {
+  background: #e8f8f0;
+  color: #19b37b;
+}
+
+.orange-b {
+  background: #fff2e8;
+  color: #d46b08;
+}
+
+.w-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.w-chat-btn, .w-call-btn {
+  font-size: 22rpx;
+  padding: 8rpx 22rpx;
+  border-radius: 999rpx;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.w-chat-btn {
+  background: #ffffff;
+  color: #646a73;
+  border: 1rpx solid #dcdfe6;
+}
+
+.w-call-btn {
+  background: #ff6a00;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.w-chat-btn::after, .w-call-btn::after {
+  border: none;
+}
+
+/* 打卡记录 */
+.checkin-item {
+  display: flex;
+  align-items: center;
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid #f2f4f7;
+}
+
+.checkin-item.last-ci {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ci-icon {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: #e8f8f0;
+  color: #19b37b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  margin-right: 18rpx;
+}
+
+.ci-body {
+  flex: 1;
+}
+
+.ci-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2329;
+  display: block;
+}
+
+.ci-sub {
+  font-size: 23rpx;
+  color: #8d949c;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.ci-tag {
+  font-size: 22rpx;
+  color: #19b37b;
+  font-weight: 600;
+}
+
+/* 异常待确认卡片 */
+.anomaly-card {
+  background: #fff7f0;
+  border: 2rpx solid #ffc899;
+  border-radius: 26rpx;
+  padding: 26rpx;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 22rpx;
+}
+
+.anom-icon {
+  font-size: 38rpx;
+  margin-right: 16rpx;
+}
+
+.anom-body {
+  flex: 1;
+}
+
+.anom-title {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #c84b00;
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.anom-desc {
+  font-size: 23rpx;
+  color: #7c4d2b;
+  line-height: 1.45;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.anom-price {
+  font-size: 25rpx;
+  font-weight: 800;
+  color: #c84b00;
+}
+
+.anom-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-left: 14rpx;
+}
+
+.anom-reject, .anom-agree {
+  font-size: 22rpx;
+  padding: 8rpx 20rpx;
+  border-radius: 12rpx;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.anom-reject {
+  background: #ffffff;
+  color: #646a73;
+  border: 1rpx solid #dcdfe6;
+}
+
+.anom-agree {
+  background: #ff6a00;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.anom-reject::after, .anom-agree::after {
+  border: none;
+}
+
+.anom-status-pill {
+  background: #ffe8d6;
+  color: #c84b00;
+  font-size: 22rpx;
+  font-weight: 700;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+}
+
+.chat-entry-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-entry-title {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #1f2329;
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.chat-entry-sub {
+  font-size: 23rpx;
+  color: #8d949c;
+}
+
+.chat-new-msg {
+  font-size: 25rpx;
+  font-weight: 700;
+  color: #ff6a00;
+}
+
+.triple-actions {
+  display: flex;
+  gap: 18rpx;
+  margin-bottom: 24rpx;
+}
+
+.t-btn {
+  flex: 1;
+  background: #ffffff;
+  color: #4e5969;
+  font-size: 26rpx;
+  border-radius: 20rpx;
+  height: 82rpx;
+  line-height: 82rpx;
+  border: 1rpx solid #e5e6eb;
+  margin: 0;
+}
+
+.t-btn::after {
+  border: none;
+}
+
+.bottom-placeholder {
+  height: 140rpx;
+}
+
+.bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 124rpx;
+  background: #ffffff;
+  padding: 0 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+  z-index: 100;
+}
+
+.dual-bar {
+  gap: 20rpx;
+}
+
+.outline-btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #ffffff;
+  color: #ff6a00;
+  border: 2rpx solid #ffb480;
+  border-radius: 20rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  margin: 0;
+}
+
+.main-bar-btn {
+  flex: 1.3;
+  height: 88rpx;
+  line-height: 88rpx;
+  margin: 0;
+}
+
+.bottom-left-tip {
+  display: flex;
+  flex-direction: column;
+}
+
+.tip-sm {
+  font-size: 22rpx;
+  color: #8d949c;
+}
+
+.tip-lg {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #d46b08;
+}
+
+.confirm-done-btn {
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 56rpx;
+  margin: 0;
+}

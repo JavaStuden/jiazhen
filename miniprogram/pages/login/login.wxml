@@ -1,5 +1,5 @@
 <view class="login-container">
-  <!-- 顶部沉浸式实景头图与品牌区 -->
+  <!-- 顶部沉浸式实景头图与品牌区（完全对应图四 4.jpg） -->
   <view class="hero-section">
     <image class="hero-bg" src="/images/login_hero.jpg" mode="aspectFill"></image>
     <view class="hero-mask"></view>
@@ -18,55 +18,16 @@
 
   <!-- 浮层表单卡片 -->
   <view class="card-sheet">
-    <!-- 手机号输入框 -->
-    <view class="input-item">
-      <view class="input-icon">
-        <text class="icon-sym">📱</text>
-      </view>
-      <input 
-        class="input-control" 
-        type="number" 
-        maxlength="11" 
-        placeholder="请输入手机号" 
-        placeholder-class="placeholder"
-        value="{{phone}}"
-        bindinput="onPhoneInput"
-      />
-      <view class="input-clear" wx:if="{{phone.length > 0}}" bindtap="clearPhone">
-        <text class="clear-icon">✕</text>
-      </view>
-    </view>
+    <view class="phone-auth-note">使用微信手机号授权完成身份验证</view>
 
-    <!-- 验证码输入框 -->
-    <view class="input-item">
-      <view class="input-icon">
-        <text class="icon-sym">🛡️</text>
-      </view>
-      <input 
-        class="input-control code-input" 
-        type="number" 
-        maxlength="6" 
-        placeholder="请输入验证码" 
-        placeholder-class="placeholder"
-        value="{{code}}"
-        bindinput="onCodeInput"
-      />
-      <view class="code-divider"></view>
-      <button 
-        class="code-btn {{counting ? 'disabled' : ''}}" 
-        disabled="{{counting}}" 
-        bindtap="getSmsCode"
-      >
-        {{countdownText}}
-      </button>
-    </view>
-
-    <!-- 登录/注册 主按钮 -->
     <button class="primary-btn login-btn" bindtap="handleLogin">
-      登录 / 注册
+      阅读协议并继续
+    </button>
+    <button class="primary-btn login-btn" open-type="getPhoneNumber" bindgetphonenumber="handleWechatLogin" loading="{{busy}}" disabled="{{busy}}">
+      微信手机号快捷登录
     </button>
 
-    <!-- 角色选择双卡片（平铺左右并列） -->
+    <!-- 角色选择双卡片（平铺左右并列，完全还原图四 4.jpg） -->
     <view class="role-grid">
       <!-- 雇主卡片 -->
       <view 
@@ -94,7 +55,7 @@
           <text class="check-mark">✓</text>
         </view>
         <view class="role-avatar worker-avatar">
-          <text class="avatar-icon">🧰</text>
+          <text class="avatar-icon">👩🏻‍🍳</text>
         </view>
         <text class="role-title">我是服务人员</text>
         <text class="role-desc">接单赚钱\n自主安排时间</text>
@@ -112,8 +73,61 @@
     </view>
 
     <!-- 游客快速进入 -->
-    <view class="guest-entry" bindtap="enterDirectly">
-      <text class="guest-text">先逛逛，进入首页 ›</text>
+    <view class="guest-entry">
+      <text class="guest-text" bindtap="openAgreementSheetPreview">查看平台协议确认页</text>
+      <text class="guest-sep">·</text>
+      <text class="guest-text" bindtap="enterDirectly">先逛逛，进入首页 ›</text>
+    </view>
+  </view>
+
+  <!-- 平台协议确认底部弹窗（对应雇主端 PDF 第 2 页 / 服务端 PDF 第 1 页） -->
+  <view class="sheet-mask" wx:if="{{showAgreementSheet}}" bindtap="closeAgreementSheet">
+    <view class="agreement-sheet" catchtap="true">
+      <view class="sheet-handle"></view>
+      <view class="sheet-role-pill">
+        <text>{{selectedRole === 'customer' ? '雇主端' : '服务人员端'}}</text>
+      </view>
+      <text class="sheet-title">{{selectedRole === 'customer' ? '平台协议确认' : '服务人员协议确认'}}</text>
+      <text class="sheet-sub">首次使用须阅读并确认以下协议</text>
+
+      <view class="rule-list">
+        <view class="rule-item" bindtap="viewRuleDetail" data-title="用户协议与隐私政策">
+          <view class="rule-check">✓</view>
+          <text class="rule-name">用户协议与隐私政策</text>
+          <text class="rule-arrow">›</text>
+        </view>
+        <view class="rule-item" bindtap="viewRuleDetail" data-title="{{selectedRole === 'customer' ? '平台服务规则' : '服务人员入驻及接单规则'}}">
+          <view class="rule-check">✓</view>
+          <text class="rule-name">{{selectedRole === 'customer' ? '平台服务规则' : '服务人员入驻及接单规则'}}</text>
+          <text class="rule-arrow">›</text>
+        </view>
+        <view class="rule-item" bindtap="viewRuleDetail" data-title="{{selectedRole === 'customer' ? '交易、售后与沟通规则' : '平台履约与保证金规则'}}">
+          <view class="rule-check">✓</view>
+          <text class="rule-name">{{selectedRole === 'customer' ? '交易、售后与沟通规则' : '平台履约与保证金规则'}}</text>
+          <text class="rule-arrow">›</text>
+        </view>
+      </view>
+
+      <view class="force-notice">
+        <view class="force-icon">🛡️</view>
+        <view class="force-body">
+          <text class="force-title">强制确认说明</text>
+          <text class="force-desc">平台更新重要规则时将再次弹窗确认；\n未确认前不能发布任务或接单。</text>
+        </view>
+      </view>
+
+      <view class="sheet-agree-row" bindtap="toggleSheetConfirm">
+        <view class="checkbox {{sheetConfirmed ? 'checked' : ''}}">
+          <text wx:if="{{sheetConfirmed}}" class="check-icon">✓</text>
+        </view>
+        <text class="sheet-agree-text">我已阅读并同意以上全部协议</text>
+      </view>
+
+      <button class="primary-btn sheet-confirm-btn" bindtap="confirmAgreementAndContinue">
+        同意并继续
+      </button>
+      <text class="sheet-trace">协议内容、版本及确认时间由平台留痕</text>
+      <view class="sheet-cancel" bindtap="closeAgreementSheet">取消</view>
     </view>
   </view>
 </view>

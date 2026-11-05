@@ -8,4 +8,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     long countByStatusIn(List<String> statuses);
     long countByStatus(String status);
     List<Order> findByStatus(String status);
+    List<Order> findByCustomerOpenIdOrderByCreatedAtDesc(String customerOpenId);
+    List<Order> findByProviderIdOrderByCreatedAtDesc(Long providerId);
 }

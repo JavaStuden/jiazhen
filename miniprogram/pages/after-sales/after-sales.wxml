@@ -1,0 +1,289 @@
+<view class="container">
+  <!-- 顶部快捷页面切换导航 -->
+  <view class="mode-switch-bar">
+    <view class="m-pill {{mode === 'apply' ? 'active' : ''}}" bindtap="onModeTabClick" data-mode="apply">申请售后</view>
+    <view class="m-pill {{mode === 'progress' ? 'active' : ''}}" bindtap="onModeTabClick" data-mode="progress">售后进度</view>
+    <view class="m-pill {{mode === 'review' ? 'active' : ''}}" bindtap="onModeTabClick" data-mode="review">评价服务</view>
+    <view class="m-pill {{mode === 'complaint' ? 'active' : ''}}" bindtap="onModeTabClick" data-mode="complaint">投诉举报</view>
+  </view>
+
+  <!-- 模式 1：申请售后（完全对应用户端 PDF 第 17 页） -->
+  <block wx:if="{{mode === 'apply'}}">
+    <view class="card order-brief">
+      <image class="ob-avatar" src="/images/login_hero.jpg" mode="aspectFill"></image>
+      <view class="ob-main">
+        <text class="ob-tag">{{order.category}}</text>
+        <text class="ob-title">{{order.serviceName || '订单信息'}}</text>
+        <text class="ob-time">{{order.scheduledAt}}</text>
+      </view>
+      <view class="ob-right">
+        <text class="ob-price">¥{{order.amount || 0}}</text>
+        <text class="ob-status">{{order.status}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">售后类型</view>
+      <view class="type-grid">
+        <view 
+          wx:for="{{issueTypes}}" 
+          wx:key="*this"
+          class="type-btn {{selectedIssueType === item ? 'active' : ''}}"
+          bindtap="selectIssueType"
+          data-type="{{item}}"
+        >
+          <text>{{item}}</text>
+          <view class="type-check" wx:if="{{selectedIssueType === item}}">✓</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">问题说明</view>
+      <textarea 
+        class="desc-box" 
+        placeholder="请详细描述您遇到的问题，便于平台快速处理" 
+        maxlength="500"
+        value="{{issueDesc}}"
+        bindinput="onIssueDescInput"
+      ></textarea>
+    </view>
+
+    <view class="card">
+      <view class="card-title">上传凭证 <text class="sub-hint">支持图片或视频，最多6个</text></view>
+      <view class="upload-row">
+        <view class="upload-box">+<text>添加图片</text></view>
+        <view class="upload-box">+<text>添加视频</text></view>
+        <image class="uploaded-thumb" src="/images/service_banner.jpg" mode="aspectFill"></image>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">退款申请</view>
+      <view class="kv-row">
+        <view>
+          <text class="kv-lbl">申请退款金额</text>
+          <text class="kv-sub">最终退款金额以平台审核结果为准</text>
+        </view>
+        <text class="kv-price">¥{{refundAmount}}</text>
+      </view>
+      <view class="kv-row last-kv">
+        <text class="kv-lbl">退款方式</text>
+        <text class="kv-val">原支付方式退回 ›</text>
+      </view>
+    </view>
+
+    <view class="guarantee-box">
+      <text class="g-icon">🛡️</text>
+      <view>
+        <text class="g-title">平台售后保障</text>
+        <text class="g-sub">客服将在1个工作日内联系您，处理过程全程留痕</text>
+      </view>
+    </view>
+
+    <button class="primary-btn submit-full-btn" bindtap="submitAfterSalesApply">提交售后申请</button>
+  </block>
+
+  <!-- 模式 2：售后进度（完全对应用户端 PDF 第 26 页） -->
+  <block wx:elif="{{mode === 'progress'}}">
+    <view class="card progress-hero">
+      <view class="ph-icon">🛡️</view>
+      <view>
+        <text class="ph-title">平台处理中</text>
+        <text class="ph-sub">预计24小时内给出处理结果</text>
+        <text class="ph-no">订单号：{{order.orderNo}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="v-step done">
+        <view class="v-dot green">✓</view>
+        <view class="v-body">
+          <text class="v-title">已提交申请</text>
+          <text class="v-time">8月9日 10:18</text>
+        </view>
+      </view>
+      <view class="v-step done">
+        <view class="v-dot green">✓</view>
+        <view class="v-body">
+          <text class="v-title">客服已受理</text>
+          <text class="v-time">8月9日 10:36</text>
+        </view>
+      </view>
+      <view class="v-step current">
+        <view class="v-dot blue">●</view>
+        <view class="v-body">
+          <text class="v-title">核验服务凭证</text>
+          <text class="v-time blue-txt">处理中</text>
+        </view>
+      </view>
+      <view class="v-step last-v">
+        <view class="v-dot"></view>
+        <view class="v-body">
+          <text class="v-title">处理结果</text>
+          <text class="v-time">待处理</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">申请信息</view>
+      <view class="kv-row"><text class="kv-lbl">处理状态</text><text class="kv-val">{{order.afterSalesStatus}}</text></view>
+      <view class="kv-row last-kv"><text class="kv-lbl">问题说明</text><text class="kv-val">{{order.afterSalesReason}}</text></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">平台消息</view>
+      <view class="cs-msg">
+        <image class="cs-avatar" src="/images/login_hero.jpg" mode="aspectFill"></image>
+        <view class="cs-body">
+          <text class="cs-txt">您好，已收到您的申请，正在联系双方核验服务记录，请保持站内消息畅通。</text>
+          <text class="cs-time">11:02</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="dual-row">
+      <button class="outline-btn" bindtap="onModeTabClick" data-mode="apply">补充凭证</button>
+      <button class="primary-btn main-bar-btn" bindtap="contactPlatformCS">🎧 联系平台客服</button>
+    </view>
+    <button class="cancel-text-btn" bindtap="cancelAfterSales">撤销售后申请</button>
+  </block>
+
+  <!-- 模式 3：评价服务（完全对应用户端 PDF 第 25 页） -->
+  <block wx:elif="{{mode === 'review'}}">
+    <view class="card order-brief">
+      <image class="ob-avatar" src="/images/package_thumb.jpg" mode="aspectFill"></image>
+      <view class="ob-main">
+        <view class="ob-name-row">
+          <text class="ob-title">{{order.providerName || '服务人员'}}</text>
+          <text class="ob-tag">金牌服务</text>
+        </view>
+        <text class="ob-time">{{order.serviceName}} · 订单号 {{orderNo}}</text>
+      </view>
+      <text class="ob-status">已完成</text>
+    </view>
+
+    <view class="card star-card">
+      <text class="star-heading">本次服务满意吗？</text>
+      <view class="stars-row">
+        <text 
+          wx:for="{{[1,2,3,4,5]}}" 
+          wx:key="*this" 
+          class="star-ico {{item <= starScore ? 'lit' : ''}}"
+          bindtap="setStar"
+          data-score="{{item}}"
+        >★</text>
+      </view>
+      <text class="star-sub">满意 · {{starScore}}.0分</text>
+
+      <view class="card-title left-align">选择评价标签</view>
+      <view class="tag-wrap">
+        <view 
+          wx:for="{{reviewTags}}" 
+          wx:key="name"
+          class="rev-chip {{item.active ? 'active' : ''}}"
+          bindtap="toggleReviewTag"
+          data-index="{{index}}"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">补充评价</view>
+      <textarea 
+        class="desc-box" 
+        placeholder="说说本次服务体验，帮助我们持续改进"
+        maxlength="200"
+        value="{{reviewText}}"
+        bindinput="onReviewInput"
+      ></textarea>
+    </view>
+
+    <view class="card">
+      <view class="switch-row" bindtap="toggleAnonReview">
+        <view>
+          <text class="sw-title">匿名评价</text>
+          <text class="sw-sub">服务人员不会看到您的昵称</text>
+        </view>
+        <view class="toggle-pill {{anonymousReview ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+      <view class="switch-row last-sw" bindtap="toggleSyncReward">
+        <text class="sw-title">同步奖励平台</text>
+        <view class="toggle-pill {{syncReward ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+    </view>
+
+    <button class="primary-btn submit-full-btn" bindtap="submitReview">提交评价</button>
+  </block>
+
+  <!-- 模式 4：投诉与廉政举报（完全对应用户端 PDF 第 27 页） -->
+  <block wx:else>
+    <view class="guarantee-box orange-g">
+      <text class="g-icon">🛡️</text>
+      <view>
+        <text class="g-title">平台保护每一份真实反馈</text>
+        <text class="g-sub">材料将加密保存，未经允许不会公开举报人信息</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">选择问题类型</view>
+      <view class="comp-grid">
+        <view 
+          wx:for="{{complaintTypes}}" 
+          wx:key="*this"
+          class="comp-box {{selectedComplaintType === item ? 'active' : ''}}"
+          bindtap="selectComplaintType"
+          data-type="{{item}}"
+        >
+          <text class="comp-ico">{{index === 1 ? '💴' : index === 3 ? '🔒' : index === 4 ? '⚠️' : '📋'}}</text>
+          <text class="comp-name">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">投诉对象</view>
+      <view class="target-tabs">
+        <view 
+          wx:for="{{['服务人员', '订单', '平台工作人员']}}" 
+          wx:key="*this"
+          class="t-tab {{complaintTargetTab === item ? 'active' : ''}}"
+          bindtap="selectComplaintTarget"
+          data-target="{{item}}"
+        >{{item}}</view>
+      </view>
+      <view class="kv-row last-kv">
+        <text class="kv-lbl">关联对象</text>
+        <text class="kv-val">{{order.providerName || '服务人员'}} · 订单 {{orderNo}} ›</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">问题描述</view>
+      <textarea 
+        class="desc-box" 
+        value="{{complaintDesc}}"
+        bindinput="onComplaintInput"
+      ></textarea>
+    </view>
+
+    <view class="card">
+      <view class="kv-row">
+        <text class="kv-lbl">联系方式</text>
+        <text class="kv-val">138****2068 ›</text>
+      </view>
+      <view class="switch-row last-sw" bindtap="toggleAnonComplaint">
+        <view>
+          <text class="sw-title">匿名提交 <text class="sw-sub-inline">对被投诉方隐藏个人信息</text></text>
+        </view>
+        <view class="toggle-pill {{anonymousComplaint ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+    </view>
+
+    <button class="primary-btn submit-full-btn" bindtap="submitComplaint">提交平台审核</button>
+  </block>
+</view>

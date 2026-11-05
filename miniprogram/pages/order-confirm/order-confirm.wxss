@@ -1,0 +1,678 @@
+page {
+  background-color: #f7f8fa;
+  min-height: 100vh;
+}
+
+.container {
+  padding: 20rpx 28rpx 60rpx;
+}
+
+.top-sub {
+  text-align: center;
+  font-size: 24rpx;
+  color: #8d949c;
+  margin-bottom: 16rpx;
+}
+
+.steps-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx 0 28rpx;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-circle {
+  width: 42rpx;
+  height: 42rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8rpx;
+}
+
+.done-circle {
+  border: 2rpx solid #ff6a00;
+  color: #ff6a00;
+  background: #fff2e8;
+}
+
+.active-circle {
+  background: #ff6a00;
+  color: #ffffff;
+}
+
+.step-num {
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.step-name {
+  font-size: 22rpx;
+  color: #8d949c;
+}
+
+.active-name {
+  color: #ff6a00;
+  font-weight: 700;
+}
+
+.step-line {
+  width: 90rpx;
+  height: 2rpx;
+  background: #dfe2e7;
+  margin: -30rpx 16rpx 0;
+}
+
+.active-line {
+  background: #ff6a00;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 28rpx;
+  margin-bottom: 22rpx;
+  border: 1rpx solid #eceef2;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.03);
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1f2329;
+  margin-bottom: 22rpx;
+}
+
+.pkg-summary-card {
+  display: flex;
+  align-items: center;
+}
+
+.pkg-img {
+  width: 148rpx;
+  height: 148rpx;
+  border-radius: 20rpx;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.pkg-info {
+  flex: 1;
+}
+
+.pkg-cat-pill {
+  display: inline-block;
+  background: #fff2e8;
+  color: #ff6a00;
+  font-size: 20rpx;
+  font-weight: 700;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+  margin-bottom: 8rpx;
+}
+
+.pkg-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8rpx;
+}
+
+.pkg-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1f2329;
+}
+
+.pkg-price {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+.pkg-meta {
+  display: block;
+  font-size: 23rpx;
+  color: #8d949c;
+  margin-top: 4rpx;
+}
+
+/* 发布方式双卡 */
+.mode-grid {
+  display: flex;
+  gap: 20rpx;
+}
+
+.mode-box {
+  flex: 1;
+  position: relative;
+  border: 2rpx solid #e5e6eb;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.mode-box.active {
+  border-color: #ff6a00;
+  background: #fff9f5;
+}
+
+.urgent-badge {
+  position: absolute;
+  top: -14rpx;
+  right: 16rpx;
+  background: #fff2e8;
+  color: #ff6a00;
+  border: 1rpx solid #ffc299;
+  font-size: 18rpx;
+  font-weight: 700;
+  padding: 2rpx 10rpx;
+  border-radius: 8rpx;
+}
+
+.radio-dot {
+  width: 34rpx;
+  height: 34rpx;
+  border-radius: 50%;
+  border: 2rpx solid #c4c8d0;
+  margin-right: 16rpx;
+}
+
+.radio-dot.checked {
+  background: #ff6a00;
+  border-color: #ff6a00;
+}
+
+.mode-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.mode-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2329;
+}
+
+.mode-sub {
+  font-size: 24rpx;
+  color: #8d949c;
+  margin-top: 4rpx;
+}
+
+.orange-text {
+  color: #ff6a00 !important;
+  font-weight: 700;
+}
+
+/* 费用明细 */
+.fee-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+}
+
+.fee-left {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.fee-label {
+  font-size: 28rpx;
+  color: #4e5969;
+}
+
+.switch-tag, .tech-pill {
+  background: #fff2e8;
+  color: #ff6a00;
+  font-size: 20rpx;
+  font-weight: 600;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+}
+
+.fee-val {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2329;
+}
+
+.coupon-val {
+  color: #ff6a00;
+}
+
+.tech-note {
+  background: #fff8f3;
+  color: #9a6e52;
+  font-size: 22rpx;
+  padding: 16rpx 20rpx;
+  border-radius: 14rpx;
+  margin: 10rpx 0 20rpx;
+}
+
+.fee-divider {
+  height: 1rpx;
+  background: #f0f2f5;
+  margin-bottom: 20rpx;
+}
+
+.fee-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.total-lbl {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1f2329;
+}
+
+.total-num {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+/* 支付方式 */
+.pay-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22rpx 0;
+  border-bottom: 1rpx solid #f2f4f7;
+}
+
+.pay-row.last-row {
+  border-bottom: none;
+  padding-bottom: 4rpx;
+}
+
+.pay-left {
+  display: flex;
+  align-items: center;
+}
+
+.pay-icon {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 18rpx;
+  font-size: 28rpx;
+}
+
+.wechat-bg {
+  background: #e8f8f0;
+}
+
+.wallet-bg {
+  background: #fff3e6;
+}
+
+.pay-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2329;
+  margin-right: 14rpx;
+}
+
+.pay-sub {
+  font-size: 24rpx;
+  color: #8d949c;
+}
+
+.radio-circle {
+  width: 38rpx;
+  height: 38rpx;
+  border-radius: 50%;
+  border: 2rpx solid #c4c8d0;
+}
+
+.radio-circle.active {
+  border: 10rpx solid #ff6a00;
+}
+
+/* 履约保障深色卡 */
+.guarantee-card {
+  background: #272b34;
+  border-radius: 24rpx;
+  padding: 28rpx 32rpx;
+  color: #ffffff;
+  margin-bottom: 30rpx;
+}
+
+.guarantee-title {
+  font-size: 30rpx;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 14rpx;
+}
+
+.guarantee-items {
+  display: flex;
+  gap: 32rpx;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.bottom-placeholder {
+  height: 140rpx;
+}
+
+.bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 124rpx;
+  background: #ffffff;
+  padding: 0 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+  z-index: 100;
+}
+
+.bottom-price {
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-lbl {
+  font-size: 22rpx;
+  color: #8d949c;
+}
+
+.bottom-val {
+  font-size: 42rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+.pay-btn {
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 56rpx;
+  margin: 0;
+}
+
+/* 发布成功视图（PDF 第 19 页） */
+.success-hero-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 44rpx 28rpx;
+}
+
+.success-icon {
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: 50%;
+  background: #22a861;
+  color: #ffffff;
+  font-size: 56rpx;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+  box-shadow: 0 10rpx 24rpx rgba(34, 168, 97, 0.25);
+}
+
+.success-title {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #1f2329;
+  margin-bottom: 8rpx;
+}
+
+.success-sub {
+  font-size: 26rpx;
+  color: #8d949c;
+  margin-bottom: 20rpx;
+}
+
+.order-no-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.order-no-text {
+  font-size: 24rpx;
+  color: #8d949c;
+}
+
+.urgent-tag {
+  background: #fff2e8;
+  color: #ff6a00;
+  font-size: 20rpx;
+  font-weight: 700;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+}
+
+.match-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.m-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 130rpx;
+}
+
+.m-dot {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #e5e6eb;
+  color: #ffffff;
+  font-size: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rpx;
+}
+
+.green-dot {
+  background: #22a861;
+}
+
+.orange-dot {
+  background: #ff6a00;
+}
+
+.m-title {
+  font-size: 23rpx;
+  font-weight: 600;
+  color: #4e5969;
+}
+
+.m-time {
+  font-size: 20rpx;
+  color: #8d949c;
+  margin-top: 4rpx;
+}
+
+.m-line {
+  flex: 1;
+  height: 3rpx;
+  background: #e5e6eb;
+  margin-top: 20rpx;
+}
+
+.m-line.active {
+  background: #22a861;
+}
+
+.match-stats-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.m-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.m-stat-lbl {
+  font-size: 23rpx;
+  color: #8d949c;
+  margin-bottom: 8rpx;
+}
+
+.m-stat-val {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #1f2329;
+}
+
+.m-divider {
+  width: 2rpx;
+  height: 54rpx;
+  background: #eceef2;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.s-line {
+  font-size: 26rpx;
+  color: #4e5969;
+}
+
+.summary-price {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #ff6a00;
+}
+
+.rec-provider {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f2f4f7;
+}
+
+.rec-Avatar, .rec-avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.rec-main {
+  flex: 1;
+}
+
+.rec-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 8rpx;
+}
+
+.rec-name {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #1f2329;
+}
+
+.rec-badge {
+  background: #fff2e8;
+  color: #ff6a00;
+  font-size: 20rpx;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.rec-skill {
+  background: #edf5ff;
+  color: #2b70c9;
+  font-size: 20rpx;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.rec-meta {
+  font-size: 23rpx;
+  color: #8d949c;
+}
+
+.rec-btn {
+  background: #ffffff;
+  color: #ff6a00;
+  border: 1rpx solid #ffb480;
+  font-size: 24rpx;
+  border-radius: 999rpx;
+  padding: 8rpx 24rpx;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.rec-btn::after {
+  border: none;
+}
+
+.privacy-tip {
+  margin-top: 20rpx;
+  background: #fff8f3;
+  color: #9a6e52;
+  font-size: 22rpx;
+  padding: 14rpx 20rpx;
+  border-radius: 12rpx;
+}
+
+.dual-btns {
+  gap: 22rpx;
+}
+
+.cancel-outline-btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #ffffff;
+  color: #ff6a00;
+  border: 2rpx solid #ffb480;
+  border-radius: 20rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  margin: 0;
+}
+
+.view-order-btn {
+  flex: 1.3;
+  height: 88rpx;
+  line-height: 88rpx;
+  margin: 0;
+}

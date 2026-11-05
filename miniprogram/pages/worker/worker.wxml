@@ -1,102 +1,293 @@
-<view class="container">
-  <!-- 顶部服务人员信息栏 -->
-  <view class="worker-card">
-    <view class="worker-avatar-wrap">
-      <image class="worker-avatar" src="/images/logo.jpg" mode="aspectFill"></image>
-      <view class="badge-tag">金牌</view>
-    </view>
-    <view class="worker-info">
-      <view class="name-row">
-        <text class="worker-name">李阿姨</text>
-        <text class="worker-skill">保洁师 · 养老护理员</text>
-      </view>
-      <view class="meta-row">
-        <text class="meta-tag">信用 96分</text>
-        <text class="meta-tag">证件有效</text>
-        <text class="meta-tag">接单中</text>
-      </view>
-    </view>
-    <view class="switch-client-btn" bindtap="switchToCustomer">
-      <text class="switch-btn-text">切换雇主端</text>
-    </view>
-  </view>
-
-  <!-- 收入与统计看板 -->
-  <view class="stats-card">
-    <view class="stats-top">
-      <text class="stats-title">今日有 18 个附近订单可抢</text>
-      <view class="bell-pill" bindtap="toggleBell">
-        <text class="bell-icon">🔔</text>
-        <text class="bell-text">{{bellEnabled ? '听单已开启' : '听单已静音'}}</text>
-      </view>
-    </view>
-    <view class="stats-grid">
-      <view class="stat-item">
-        <text class="stat-val">¥8,680</text>
-        <text class="stat-lbl">本月收入</text>
-      </view>
-      <view class="stat-divider"></view>
-      <view class="stat-item">
-        <text class="stat-val">¥398</text>
-        <text class="stat-lbl">待结算</text>
-      </view>
-      <view class="stat-divider"></view>
-      <view class="stat-item">
-        <text class="stat-val">¥320</text>
-        <text class="stat-lbl">已冻结保证金</text>
-      </view>
-    </view>
-  </view>
-
-  <!-- 附近可抢订单标题 -->
-  <view class="section-row">
-    <view class="section-left">
-      <view class="section-dot"></view>
-      <text class="section-title">附近可抢订单</text>
-    </view>
-    <view class="filter-chips">
-      <text class="filter-chip active">智能匹配</text>
-      <text class="filter-chip">距离优先</text>
-      <text class="filter-chip">信用优先</text>
-    </view>
-  </view>
-
-  <!-- 订单列表 -->
-  <view class="orders-wrap">
-    <view class="grab-card" wx:for="{{grabOrders}}" wx:key="id">
-      <view class="grab-top">
-        <view class="tag-label-wrap">
-          <text class="match-tag">优先匹配</text>
-          <text class="type-tag">{{item.category}}</text>
+<view class="worker-shell">
+  <!-- Tab 1：去抢单大厅（完全还原服务端 PDF 第 3 页） -->
+  <block wx:if="{{bottomTab === 'hall'}}">
+    <view class="orange-header">
+      <view class="oh-top">
+        <view class="oh-brand">
+          <image class="oh-logo" src="/images/logo.jpg" mode="aspectFit"></image>
+          <view>
+            <text class="oh-name">太禾行</text>
+            <text class="oh-sub">服务人员端</text>
+          </view>
         </view>
-        <view class="income-wrap">
-          <text class="income-label">预计收入</text>
-          <text class="income-val">¥{{item.netIncome}}</text>
+        <view class="switch-pill" bindtap="switchToCustomer">切换雇主端</view>
+      </view>
+
+      <view class="oh-worker">
+        <image class="oh-avatar" src="/images/package_thumb.jpg" mode="aspectFill" bindtap="goWorkerOps" data-sec="onboarding"></image>
+        <view class="oh-worker-txt">
+          <text class="oh-greet">{{workerName}}</text>
+          <text class="oh-headline">今日有 {{grabOrders.length}} 个可接订单</text>
+          <text class="oh-meta">服务人员工作台</text>
         </view>
       </view>
 
-      <view class="grab-title-row">
-        <text class="grab-title">{{item.title}}</text>
-        <text class="distance-badge">{{item.distance}}</text>
-      </view>
-
-      <view class="time-address">
-        <text class="ta-item">🕒 {{item.time}}</text>
-        <text class="ta-item">📍 {{item.address}}</text>
-      </view>
-
-      <view class="employer-meta">
-        <text class="employer-text">雇主信用 {{item.employerCredit}}分 · 历史发单{{item.orderCount}}次 · 好评率100%</text>
-      </view>
-
-      <view class="grab-bottom">
-        <view class="fee-breakdown">
-          <text class="fee-text">服务价 ¥{{item.totalPrice}} - 平台费 ¥{{item.platformFee}}</text>
+      <view class="oh-stats">
+        <view class="oh-stat" bindtap="goWorkerOps" data-sec="income">
+          <text class="oh-val">-</text>
+          <text class="oh-lbl">结算服务尚未开通</text>
         </view>
-        <button class="grab-btn" bindtap="grabOrder" data-order="{{item}}">
-          立即抢单
-        </button>
+        <view class="oh-div"></view>
+        <view class="oh-stat" bindtap="goWorkerOps" data-sec="settlement">
+          <text class="oh-val">-</text>
+          <text class="oh-lbl">待结算</text>
+        </view>
+        <view class="oh-div"></view>
+        <view class="oh-stat" bindtap="goWorkerOps" data-sec="deposit">
+          <text class="oh-val">-</text>
+          <text class="oh-lbl">已冻结保证金</text>
+        </view>
       </view>
+    </view>
+
+    <view class="body-pad">
+      <!-- 抢单提醒铃声横幅 -->
+      <view class="remind-banner">
+        <text class="rb-ico">🔔</text>
+        <view class="rb-body">
+          <text class="rb-title">抢单提醒铃声已开启</text>
+          <text class="rb-sub">新订单、派单与异常消息即时提醒</text>
+        </view>
+        <button class="rb-btn" bindtap="goWorkerOps" data-sec="remind">提醒设置</button>
+      </view>
+
+      <!-- 附近可抢订单标题与筛选 -->
+      <view class="sec-bar">
+        <text class="sec-title">附近可抢订单</text>
+        <text class="sec-refresh" bindtap="refreshLocation">{{currentLocation}} · 定位 ↻</text>
+      </view>
+
+      <view class="chip-row">
+        <view 
+          wx:for="{{['智能匹配', '距离优先', '信用优先', '证书匹配']}}" 
+          wx:key="*this"
+          class="f-chip {{filterChip === item ? 'active' : ''}}"
+          bindtap="selectFilterChip"
+          data-chip="{{item}}"
+        >{{item}}</view>
+      </view>
+
+      <!-- 可抢订单卡片列表 -->
+      <view 
+        class="card grab-card" 
+        wx:for="{{grabOrders}}" 
+        wx:key="id"
+        bindtap="goWorkerOps"
+        data-sec="grab-detail"
+        data-order-id="{{item.id}}"
+      >
+        <view class="gc-top">
+          <view class="gc-tags">
+            <text class="gc-badge {{item.matchClass}}">{{item.matchType}}</text>
+            <text class="gc-badge cat-tag">{{item.category}}</text>
+          </view>
+          <text class="gc-price">¥{{item.price}}</text>
+        </view>
+
+        <text class="gc-title">{{item.title}}</text>
+        <text class="gc-time">{{item.time}} · {{item.distance}}</text>
+
+        <view class="gc-pills" wx:if="{{item.tags.length > 0}}">
+          <text class="gc-pill" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+        </view>
+
+        <view class="gc-bottom">
+          <text class="gc-foot">{{item.footNote}}</text>
+          <button class="gc-btn">{{item.btnText}}</button>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- Tab 2：服务单列表（完全还原服务端 PDF 第 9 页） -->
+  <block wx:elif="{{bottomTab === 'orders'}}">
+    <view class="body-pad top-pad">
+      <view class="chip-row">
+        <view 
+          wx:for="{{['全部', '待上门', '服务中', '待结算', '已完成']}}" 
+          wx:key="*this"
+          class="f-chip {{orderStatusTab === item ? 'active' : ''}}"
+          bindtap="selectOrderStatusTab"
+          data-status="{{item}}"
+        >{{item}}</view>
+      </view>
+
+      <view class="card srv-order-card" wx:for="{{serviceOrders}}" wx:if="{{orderStatusTab === '全部' || item.status === orderStatusTab}}" wx:key="id">
+        <view class="so-top">
+          <text class="gc-badge {{item.status === '服务中' ? 'green-tag' : (item.status === '待上门' ? 'orange-tag' : 'blue-tag')}}">{{item.status}}</text>
+          <text class="so-no">单号 {{item.orderNo}}</text>
+        </view>
+
+        <view class="so-mid">
+          <view class="so-info">
+            <text class="gc-title">{{item.title}}</text>
+            <text class="so-line">🕒 {{item.time}}</text>
+            <text class="so-line">📍 {{item.address}} · <text class="orange-txt">{{item.distance}}</text></text>
+            <text class="so-line">👤 {{item.customer}}</text>
+          </view>
+          <view class="so-right">
+            <text class="so-lbl">{{item.incomeLabel}}</text>
+            <text class="so-val" wx:if="{{item.incomeVal}}">{{item.incomeVal}}</text>
+            <text class="so-timer" wx:if="{{item.timerVal}}">{{item.timerVal}}</text>
+          </view>
+        </view>
+
+        <!-- 待上门操作按钮 -->
+        <view class="so-actions" wx:if="{{item.status === '待上门'}}">
+          <button class="so-outline" bindtap="callCustomer" data-order="{{item}}">📞 联系雇主</button>
+          <button class="so-primary" bindtap="goWorkerOps" data-sec="checkin" data-order-id="{{item.id}}">🧭 导航出发 / 打卡</button>
+        </view>
+
+        <!-- 服务中操作按钮 -->
+        <view class="so-actions" wx:elif="{{item.status === '服务中'}}">
+          <button class="so-outline" bindtap="goWorkerOps" data-sec="anomaly" data-order-id="{{item.id}}">⚠️ 异常上报</button>
+          <button class="so-green" bindtap="goWorkerOps" data-sec="complete" data-order-id="{{item.id}}">▶ 完成服务</button>
+        </view>
+
+        <!-- 待结算操作按钮 -->
+        <view class="so-actions" wx:else>
+          <button class="so-blue-outline" bindtap="goWorkerOps" data-sec="settlement" data-order-id="{{item.id}}">📋 查看结算进度</button>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- Tab 3：服务工作台·我的（完全还原服务端 PDF 第 4 页） -->
+  <block wx:else>
+    <view class="body-pad top-pad">
+      <view class="w-top-bar">
+        <view class="oh-brand">
+          <image class="oh-logo" src="/images/logo.jpg" mode="aspectFit"></image>
+          <view>
+            <text class="w-brand-title">太禾行</text>
+            <text class="w-brand-sub">服务工作台 · 我的</text>
+          </view>
+        </view>
+        <view class="switch-customer-pill" bindtap="switchToCustomer">切换雇主端</view>
+      </view>
+
+      <!-- 服务人员个人信息卡 -->
+      <view class="card w-profile-card">
+        <view class="w-avatar-circle">👩</view>
+        <view class="w-p-main">
+          <view class="w-p-row">
+            <text class="gc-title no-mb">{{workerName}}</text>
+          </view>
+          <text class="so-line">服务人员账号</text>
+        </view>
+        <button class="rb-btn" bindtap="goWorkerOps" data-sec="onboarding">入驻资料</button>
+      </view>
+
+      <!-- 可提现收入深棕渐变卡（点击进入收入账单 P7） -->
+      <view class="income-hero-card" bindtap="goWorkerOps" data-sec="income">
+        <text class="ih-lbl">可提现收入（元）</text>
+        <text class="ih-amt">暂未开通</text>
+        <view class="ih-stats">
+          <text>本月收入 <text class="ih-hi">-</text></text>
+          <text>待结算 <text class="ih-hi">-</text></text>
+          <text>累计完单 <text class="ih-hi">{{serviceOrders.length}}单</text></text>
+        </view>
+      </view>
+
+      <!-- 履约保证金卡片（点击进入保证金页 P6） -->
+      <view class="card" bindtap="goWorkerOps" data-sec="deposit">
+        <view class="sec-bar no-mt">
+          <text class="card-h">履约保证金</text>
+          <text class="so-lbl">保证金托管未开通 ›</text>
+        </view>
+        <view class="dep-row">
+          <text class="so-lbl">账户余额 -</text>
+          <text class="dep-mid">未配置托管账户</text>
+        </view>
+      <view class="dep-bar"><view class="dep-fill" style="width: 0%"></view></view>
+      </view>
+
+      <!-- 当前服务单卡片 -->
+      <view class="card" wx:if="{{activeOrder}}">
+        <view class="sec-bar no-mt">
+          <text class="card-h">当前服务单</text>
+          <text class="gc-badge green-tag">{{activeOrder.status}}</text>
+        </view>
+        <view class="sec-bar no-mt">
+          <text class="gc-title no-mb">{{activeOrder.serviceName}}</text>
+          <text class="gc-price">¥{{activeOrder.amount}}</text>
+        </view>
+        <text class="so-lbl">订单 {{activeOrder.orderNo}}</text>
+
+        <view class="mini-timeline">
+          <view class="mt-node"><view class="mt-dot green"></view><text>已接单</text></view>
+          <view class="mt-node"><view class="mt-dot green"></view><text wx:if="{{activeOrder.checkinTime}}">已到达 {{activeOrder.checkinTime}}</text><text wx:else>待到达</text></view>
+          <view class="mt-node"><view class="mt-dot orange"></view><text class="orange-txt">{{activeOrder.status}}</text></view>
+          <view class="mt-node"><view class="mt-dot"></view><text>待确认</text></view>
+        </view>
+
+        <view class="so-actions">
+          <button class="so-outline" bindtap="goChat">订单沟通</button>
+          <button class="so-primary" bindtap="goWorkerOps" data-sec="{{activeOrder.status === '待上门' ? 'checkin' : 'complete'}}" data-order-id="{{activeOrder.id}}">处理订单</button>
+        </view>
+      </view>
+      <view class="card" wx:else>暂无进行中的服务订单</view>
+
+      <!-- 城市合伙人与邀请好友 -->
+      <view class="dual-entry-row">
+        <view class="card half-entry" bindtap="goPartnerOrInvite" data-sec="partner">
+          <text>🤝 城市合伙人</text>
+          <text class="so-lbl">›</text>
+        </view>
+        <view class="card half-entry" bindtap="goPartnerOrInvite" data-sec="invite">
+          <text>🔗 邀请好友</text>
+          <text class="so-lbl">›</text>
+        </view>
+      </view>
+
+      <!-- 常用功能 4 宫格 -->
+      <view class="card">
+        <text class="card-h">常用功能</text>
+        <view class="tool-grid">
+          <view class="tool-item" bindtap="goWorkerOps" data-sec="income">
+            <text class="tool-ico">👛</text>
+            <text class="tool-txt">收入账单</text>
+          </view>
+          <view class="tool-item" bindtap="goWorkerOps" data-sec="certs">
+            <text class="tool-ico">📜</text>
+            <text class="tool-txt">证书技能</text>
+          </view>
+          <view class="tool-item" bindtap="goWorkerOps" data-sec="remind">
+            <text class="tool-ico">🔔</text>
+            <text class="tool-txt">接单提醒</text>
+          </view>
+          <view class="tool-item" bindtap="goComplaint">
+            <text class="tool-ico">🛡️</text>
+            <text class="tool-txt">投诉申诉</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="bottom-placeholder"></view>
+
+  <!-- 服务端专属底部导航栏（对应服务端 PDF 底部 5 栏） -->
+  <view class="worker-tabbar">
+    <view class="wt-item {{bottomTab === 'hall' ? 'active' : ''}}" bindtap="switchBottomTab" data-tab="hall">
+      <text class="wt-ico">🏠</text>
+      <text class="wt-lbl">首页</text>
+    </view>
+    <view class="wt-item {{bottomTab === 'orders' ? 'active' : ''}}" bindtap="switchBottomTab" data-tab="orders">
+      <text class="wt-ico">📋</text>
+      <text class="wt-lbl">服务单</text>
+    </view>
+    <view class="wt-center" bindtap="switchBottomTab" data-tab="hall">
+      <view class="wt-center-btn">✋</view>
+      <text class="wt-lbl orange-txt">去抢单</text>
+    </view>
+    <view class="wt-item" bindtap="switchBottomTab" data-tab="messages">
+      <text class="wt-ico">💬</text>
+      <text class="wt-lbl">消息</text>
+    </view>
+    <view class="wt-item {{bottomTab === 'mine' ? 'active' : ''}}" bindtap="switchBottomTab" data-tab="mine">
+      <text class="wt-ico">👤</text>
+      <text class="wt-lbl">我的</text>
     </view>
   </view>
 </view>

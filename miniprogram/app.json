@@ -4,9 +4,16 @@
     "pages/index/index",
     "pages/services/services",
     "pages/create-order/create-order",
+    "pages/order-confirm/order-confirm",
     "pages/orders/orders",
+    "pages/order-detail/order-detail",
+    "pages/provider-detail/provider-detail",
+    "pages/messages/messages",
+    "pages/after-sales/after-sales",
+    "pages/user-center/user-center",
     "pages/profile/profile",
-    "pages/worker/worker"
+    "pages/worker/worker",
+    "pages/worker-ops/worker-ops"
   ],
   "window": {
     "navigationBarTitleText": "太禾行到家",
@@ -26,11 +33,21 @@
       },
       {
         "pagePath": "pages/orders/orders",
-        "text": "订单"
+        "text": "订单",
+        "iconPath": "images/tab_order.png",
+        "selectedIconPath": "images/tab_order_active.png"
+      },
+      {
+        "pagePath": "pages/messages/messages",
+        "text": "消息",
+        "iconPath": "images/tab_msg.png",
+        "selectedIconPath": "images/tab_msg_active.png"
       },
       {
         "pagePath": "pages/profile/profile",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "images/tab_user.png",
+        "selectedIconPath": "images/tab_user_active.png"
       }
     ]
   }

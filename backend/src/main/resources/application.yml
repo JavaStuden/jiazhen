@@ -22,3 +22,12 @@ spring:
       hibernate:
         jdbc:
           time_zone: Asia/Shanghai
+wechat:
+  mini-program:
+    app-id: ${WECHAT_MINI_PROGRAM_APP_ID:}
+    app-secret: ${WECHAT_MINI_PROGRAM_APP_SECRET:}
+  pay:
+    merchant-id: ${WECHAT_PAY_MERCHANT_ID:}
+    certificate-serial: ${WECHAT_PAY_CERTIFICATE_SERIAL:}
+    private-key-path: ${WECHAT_PAY_PRIVATE_KEY_PATH:}
+    notify-url: ${WECHAT_PAY_NOTIFY_URL:}

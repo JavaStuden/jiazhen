@@ -1,76 +1,33 @@
 const app = getApp();
+const { request } = require('../../utils/request');
 
 Page({
   data: {
-    phone: '13800002068',
-    code: '123456',
     selectedRole: 'customer', // 'customer' | 'worker'
-    agreed: true,
-    counting: false,
-    countdown: 60,
-    countdownText: '获取验证码'
+    agreed: false,
+    busy: false,
+    showAgreementSheet: false,
+    sheetConfirmed: false
   },
 
-  onLoad() {
-    const savedRole = wx.getStorageSync('role');
+  onLoad(options) {
+    const savedRole = (options && options.role) || wx.getStorageSync('role');
     if (savedRole) {
-      this.setData({ selectedRole: savedRole });
+      this.setData({ selectedRole: savedRole, agreed: Boolean(wx.getStorageSync(`agreement_confirmed_${savedRole}`)) });
     }
-  },
-
-  onPhoneInput(e) {
-    this.setData({ phone: e.detail.value.trim() });
-  },
-
-  clearPhone() {
-    this.setData({ phone: '' });
-  },
-
-  onCodeInput(e) {
-    this.setData({ code: e.detail.value.trim() });
   },
 
   selectRole(e) {
     const role = e.currentTarget.dataset.role;
-    this.setData({ selectedRole: role });
+    this.setData({ selectedRole: role, agreed: Boolean(wx.getStorageSync(`agreement_confirmed_${role}`)) });
   },
 
   toggleAgreement() {
     this.setData({ agreed: !this.data.agreed });
   },
 
-  getSmsCode() {
-    if (!this.data.phone || this.data.phone.length !== 11) {
-      wx.showToast({ title: '请输入正确的11位手机号', icon: 'none' });
-      return;
-    }
-
-    if (this.data.counting) return;
-
-    this.setData({
-      counting: true,
-      countdown: 60,
-      countdownText: '60s后重试'
-    });
-
-    wx.showToast({ title: '验证码已发送至手机', icon: 'success' });
-
-    this.timer = setInterval(() => {
-      let count = this.data.countdown - 1;
-      if (count <= 0) {
-        clearInterval(this.timer);
-        this.setData({
-          counting: false,
-          countdown: 60,
-          countdownText: '重新获取'
-        });
-      } else {
-        this.setData({
-          countdown: count,
-          countdownText: `${count}s后重试`
-        });
-      }
-    }, 1000);
+  toggleSheetConfirm() {
+    this.setData({ sheetConfirmed: !this.data.sheetConfirmed });
   },
 
   handleLogin() {
@@ -79,47 +36,79 @@ Page({
       return;
     }
 
-    if (!this.data.phone || this.data.phone.length !== 11) {
-      wx.showToast({ title: '请输入11位手机号', icon: 'none' });
+    const { selectedRole } = this.data;
+    const confirmedKey = `agreement_confirmed_${selectedRole}`;
+    if (!wx.getStorageSync(confirmedKey)) {
+      this.setData({ showAgreementSheet: true, sheetConfirmed: false });
       return;
     }
 
-    const { selectedRole, phone } = this.data;
-    wx.setStorageSync('role', selectedRole);
-    wx.setStorageSync('phone', phone);
-    wx.setStorageSync('isLoggedIn', true);
-    if (app && app.globalData) {
-      app.globalData.role = selectedRole;
+  },
+
+  confirmAgreementAndContinue() {
+    if (!this.data.sheetConfirmed) {
+      wx.showToast({ title: '请先勾选同意全部协议', icon: 'none' });
+      return;
     }
+    const { selectedRole } = this.data;
+    wx.setStorageSync(`agreement_confirmed_${selectedRole}`, true);
+    this.setData({ showAgreementSheet: false, agreed: true });
+  },
 
-    wx.showToast({
-      title: selectedRole === 'customer' ? '雇主登录成功' : '服务人员登录成功',
-      icon: 'success'
-    });
+  closeAgreementSheet() {
+    this.setData({ showAgreementSheet: false });
+  },
 
-    setTimeout(() => {
-      if (selectedRole === 'customer') {
-        wx.switchTab({ url: '/pages/index/index' });
+  async handleWechatLogin(event) {
+    if (!this.data.agreed || !wx.getStorageSync(`agreement_confirmed_${this.data.selectedRole}`)) {
+      wx.showToast({ title: '请先阅读并确认平台协议', icon: 'none' });
+      return;
+    }
+    if (event.detail.errMsg !== 'getPhoneNumber:ok' || !event.detail.code || this.data.busy) {
+      if (event.detail.errMsg !== 'getPhoneNumber:ok') wx.showToast({ title: '需要授权手机号才能登录', icon: 'none' });
+      return;
+    }
+    this.setData({ busy: true });
+    wx.showLoading({ title: '正在验证身份' });
+    try {
+      const login = await new Promise((resolve, reject) => wx.login({ success: resolve, fail: reject }));
+      const session = await request('/auth/wechat', { method: 'POST', data: { code: login.code, role: this.data.selectedRole } });
+      app.globalData.accessToken = session.accessToken;
+      app.globalData.role = session.role;
+      wx.setStorageSync('accessToken', session.accessToken);
+      wx.setStorageSync('role', session.role);
+      const profile = await request('/auth/phone', { method: 'POST', data: { code: event.detail.code } });
+      wx.setStorageSync('phone', profile.phone);
+      wx.setStorageSync('isLoggedIn', true);
+      wx.hideLoading();
+      if (session.role === 'worker' && session.accountStatus !== '在线' && session.accountStatus !== '待机') {
+        wx.showToast({ title: '服务人员资料待审核', icon: 'none' });
       } else {
-        wx.navigateTo({ url: '/pages/worker/worker' });
+        wx.showToast({ title: '登录成功', icon: 'success' });
       }
-    }, 800);
+      setTimeout(() => {
+        if (session.role === 'customer') wx.switchTab({ url: '/pages/index/index' });
+        else if (session.accountStatus === '在线' || session.accountStatus === '待机') wx.navigateTo({ url: '/pages/worker/worker' });
+        else wx.navigateTo({ url: '/pages/worker-ops/worker-ops?section=onboarding' });
+      }, 500);
+    } catch (error) {
+      wx.hideLoading();
+      wx.showModal({ title: '登录失败', content: error.message || '请稍后重试', showCancel: false });
+    } finally {
+      this.setData({ busy: false });
+    }
+  },
+
+  openAgreementSheetPreview() {
+    this.setData({ showAgreementSheet: true, sheetConfirmed: false });
   },
 
   enterDirectly() {
-    wx.setStorageSync('role', 'customer');
-    if (app && app.globalData) {
-      app.globalData.role = 'customer';
-    }
     wx.switchTab({ url: '/pages/index/index' });
   },
 
   viewAgreement() {
-    wx.showModal({
-      title: '太禾行平台用户协议',
-      content: '太禾行到家作为专业家政与养老服务平台，严格遵循实名认证、平台担保、全程留痕原则，为广大雇主与服务人员提供安全、放心的到家生活服务。',
-      showCancel: false
-    });
+    this.setData({ showAgreementSheet: true });
   },
 
   viewPrivacy() {
@@ -130,9 +119,13 @@ Page({
     });
   },
 
-  onUnload() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
-  }
+  viewRuleDetail(e) {
+    const title = e.currentTarget.dataset.title;
+    wx.showModal({
+      title,
+      content: '太禾行到家严格执行实名认证、平台担保交易与全程服务留痕规则。严禁私下交换联系方式或跳单交易，保障雇主与服务人员双方合法权益。',
+      showCancel: false
+    });
+  },
+
 });

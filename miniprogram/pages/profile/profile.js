@@ -1,17 +1,26 @@
 const app = getApp();
+const { request } = require('../../utils/request');
 
 Page({
   data: {
     userInfo: {
-      name: '陈女士',
-      phone: '138****2068',
-      role: 'customer'
-    }
+      name: '微信用户', phone: '', role: 'customer', orderCount: 0,
+      pendingAmount: '-', invoiceAmount: '-'
+    }, loadError: ''
   },
 
   onShow() {
     const role = wx.getStorageSync('role') || 'customer';
     this.setData({ ['userInfo.role']: role });
+    Promise.all([request('/auth/me'), request('/orders')]).then(([me, orders]) => {
+      const pending = orders.filter(order => ['待支付', '待接单', '待上门', '服务中'].includes(order.status));
+      this.setData({ userInfo: {
+        ...this.data.userInfo, name: me.displayName || '微信用户', phone: me.phone || '',
+        orderCount: orders.length,
+        pendingAmount: pending.reduce((sum, order) => sum + Number(order.payableAmount || 0), 0).toFixed(2),
+        invoiceAmount: '-'
+      }, loadError: '' });
+    }).catch(error => this.setData({ loadError: error.message || '账户信息加载失败' }));
   },
 
   goOrders() {
@@ -24,25 +33,32 @@ Page({
 
   switchWorker() {
     wx.setStorageSync('role', 'worker');
+    wx.removeStorageSync('accessToken');
+    wx.removeStorageSync('isLoggedIn');
+    if (app && app.globalData) app.globalData.accessToken = '';
     if (app && app.globalData) {
       app.globalData.role = 'worker';
     }
-    wx.navigateTo({ url: '/pages/worker/worker' });
+    wx.navigateTo({ url: '/pages/login/login?role=worker' });
   },
 
-  contactService() {
-    wx.showModal({
-      title: '太禾行客服中心',
-      content: '7x24小时官方客服热线：18980779943\n如遇紧急人身或财产安全，平台提供紧急绿色通道。',
-      showCancel: false
+  goUserSection(e) {
+    const sec = e.currentTarget.dataset.sec;
+    wx.navigateTo({
+      url: `/pages/user-center/user-center?section=${sec}`
     });
   },
 
-  showFeatureToast(e) {
-    const name = e.currentTarget.dataset.name;
-    wx.showToast({
-      title: `${name}模块已就绪`,
-      icon: 'none'
+  goAfterSales(e) {
+    const mode = e.currentTarget.dataset.mode || 'progress';
+    wx.navigateTo({
+      url: `/pages/after-sales/after-sales?mode=${mode}`
+    });
+  },
+
+  goMessages() {
+    wx.navigateTo({
+      url: '/pages/messages/messages'
     });
   }
 });

@@ -1,0 +1,369 @@
+<view class="container">
+  <!-- 顶部横滑工作台模块切换器（方便一键检视服务端全部 10 个核心业务页） -->
+  <scroll-view scroll-x class="ops-tabs" enable-flex="true">
+    <view 
+      wx:for="{{navTabs}}" 
+      wx:key="key"
+      class="ops-tab {{section === item.key ? 'active' : ''}}"
+      bindtap="onNavTabClick"
+      data-sec="{{item.key}}"
+    >{{item.label}}</view>
+  </scroll-view>
+
+  <!-- 1. 抢单详情（对应服务端 PDF 第 10 页） -->
+  <block wx:if="{{section === 'grab-detail'}}">
+    <view class="orange-hero">
+      <text class="oh-pill">可抢订单</text>
+      <text class="oh-h1">{{activeOrder.serviceName || '订单详情'}}</text>
+      <text class="oh-sub">预计收入</text>
+      <text class="oh-big">¥{{activeOrder.amount || 0}}</text>
+      <view class="oh-cols">
+        <view class="oh-col"><text class="oh-sub">🏷️ 服务价</text><text class="oh-val">¥{{activeOrder.amount || 0}}</text></view>
+        <view class="oh-col"><text class="oh-sub">订单编号</text><text class="oh-val">{{activeOrder.orderNo}}</text></view>
+        <view class="oh-col"><text class="oh-sub">服务区域</text><text class="oh-val">{{activeOrder.area}}</text></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">服务信息</view>
+      <view class="kv-row"><text class="kv-lbl">🕒 时间</text><text class="kv-val">{{activeOrder.scheduledAt}}</text></view>
+      <view class="kv-row"><text class="kv-lbl">📍 区域</text><text class="kv-val">{{activeOrder.area}}</text></view>
+      <view class="kv-row"><text class="kv-lbl">📐 服务类别</text><text class="kv-val">{{activeOrder.category}}</text></view>
+      <view class="kv-row"><text class="kv-lbl">📋 套餐</text><text class="kv-val">{{activeOrder.durationLabel}}</text></view>
+      <view class="kv-row last-kv"><text class="kv-lbl">🔒 地址</text><text class="kv-val orange-txt">接单后显示详细门牌</text></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">雇主信息</view>
+      <view class="emp-row">
+        <view class="emp-avatar">👩</view>
+        <view class="emp-main">
+          <text class="emp-name">接单后查看雇主信息</text>
+          <view class="emp-tags">
+            <text class="green-pill">信用98分</text>
+            <text class="orange-pill">平台认证</text>
+          </view>
+        </view>
+      </view>
+      <view class="oh-cols dark-cols">
+        <view class="oh-col"><text class="kv-lbl">历史订单</text><text class="emp-num">32</text></view>
+        <view class="oh-col"><text class="kv-lbl">取消率</text><text class="emp-num">0%</text></view>
+        <view class="oh-col"><text class="kv-lbl">好评率</text><text class="emp-num">100%</text></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">履约保障</view>
+      <view class="kv-row last-kv">
+        <view>
+          <text class="kv-lbl">🛡️ 保证金冻结</text>
+          <text class="orange-big">-</text>
+        </view>
+        <text class="kv-lbl">完成服务并确认后自动解除</text>
+      </view>
+    </view>
+
+    <view class="bottom-bar">
+      <view>
+        <text class="kv-lbl">可抢剩余</text>
+        <text class="orange-big">04:36</text>
+      </view>
+      <button class="primary-btn bar-btn" bindtap="confirmGrabOrder">立即抢单</button>
+    </view>
+  </block>
+
+  <!-- 2. 到家打卡（对应服务端 PDF 第 11 页） -->
+  <block wx:elif="{{section === 'checkin'}}">
+    <view class="card map-card"><view class="map-route">到家打卡将读取当前 GPS 坐标并记录至订单</view></view>
+
+    <view class="card">
+      <text class="emp-name">{{activeOrder.serviceName}}</text>
+      <text class="kv-lbl">🕒 {{activeOrder.scheduledAt}}</text>
+      <text class="kv-lbl">📍 {{activeOrder.address || '订单地址不可用'}}</text>
+    </view>
+
+    <view class="card">
+      <view class="card-title">上传现场照片（步骤 2/3）</view>
+      <text class="kv-lbl">照片存储接口尚未配置，本次打卡仅记录定位和时间。</text>
+    </view>
+
+    <view class="card">
+      <view class="card-title">定位状态</view>
+      <view class="kv-row last-kv"><text class="kv-lbl">定位记录</text><text class="kv-val">确认打卡时获取</text></view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="confirmCheckin">确认到达并打卡</button>
+  </block>
+
+  <!-- 3. 服务异常上报（对应服务端 PDF 第 12 页） -->
+  <block wx:elif="{{section === 'anomaly'}}">
+    <view class="card emp-row">
+      <image class="thumb-sm" src="/images/package_thumb.jpg" mode="aspectFill"></image>
+      <view class="emp-main">
+        <text class="emp-name">3小时深度保洁</text>
+        <text class="kv-lbl">订单 {{activeOrder.orderNo}} · {{activeOrder.status}}</text>
+      </view>
+      <text class="green-pill">服务中</text>
+    </view>
+
+    <view class="card">
+      <view class="card-title">选择异常类型</view>
+      <view class="grid-2">
+        <view 
+          wx:for="{{anomalyTypes}}" 
+          wx:key="*this"
+          class="grid-btn {{selectedAnomalyType === item ? 'active' : ''}}"
+          bindtap="selectAnomalyType"
+          data-type="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">时长调整</view>
+      <view class="time-compare">
+        <view class="tc-box">14:30-17:30</view>
+        <text>→</text>
+        <view class="tc-box orange-txt">14:30-18:00</view>
+      </view>
+      <view class="chip-row">
+        <view 
+          wx:for="{{['延长30分钟', '延长60分钟', '延长90分钟', '自定义']}}" 
+          wx:key="*this"
+          class="ops-tab {{extendOption === item ? 'active' : ''}}"
+          bindtap="selectExtendOption"
+          data-opt="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">异常原因</view>
+      <textarea class="txt-area" value="{{anomalyReasonText}}" bindinput="onAnomalyReasonInput" placeholder="填写异常情况"></textarea>
+    </view>
+
+    <view class="card">
+      <view class="card-title">费用变更预览</view>
+      <view class="kv-row"><text class="kv-lbl">原订单金额</text><text class="kv-val">¥{{activeOrder.amount || 0}}</text></view>
+      <view class="kv-row last-kv"><text class="kv-lbl">当前方案</text><text class="kv-val">{{extendOption}}</text></view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="submitAnomalyReport">提交平台审核</button>
+  </block>
+
+  <!-- 4. 完成服务（对应服务端 PDF 第 13 页） -->
+  <block wx:elif="{{section === 'complete'}}">
+    <view class="card emp-row">
+      <image class="thumb-sm" src="/images/package_thumb.jpg" mode="aspectFill"></image>
+      <view class="emp-main">
+        <text class="emp-name">{{activeOrder.serviceName}}</text>
+        <text class="kv-lbl">服务时间 {{activeOrder.scheduledAt}}</text>
+      </view>
+      <view class="right-txt">
+        <text class="kv-lbl">实际计时</text>
+        <text class="orange-big">03:06:18</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">服务项目确认</view>
+      <view class="kv-row" wx:for="{{checklistItems}}" wx:key="name">
+        <text class="kv-val">🧹 {{item.name}}</text>
+        <text class="green-txt">✓ 已完成</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">服务前后照片</view>
+      <text class="kv-lbl">照片上传接口尚未配置</text>
+    </view>
+
+    <view class="card">
+      <view class="card-title">实际服务时间</view>
+      <view class="oh-cols dark-cols">
+        <view class="oh-col"><text class="kv-lbl">开始时间</text><text class="emp-num">14:28</text></view>
+        <view class="oh-col"><text class="kv-lbl">结束时间</text><text class="emp-num">17:34</text></view>
+        <view class="oh-col"><text class="kv-lbl">实际时长</text><text class="emp-num orange-txt">03:06</text></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">服务备注</view>
+      <textarea class="txt-area" value="{{completeRemark}}" bindinput="onCompleteRemarkInput" placeholder="填写服务备注"></textarea>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="submitServiceComplete">提交完成服务</button>
+  </block>
+
+  <!-- 5. 结算明细（对应服务端 PDF 第 14 页） -->
+  <block wx:elif="{{section === 'settlement'}}">
+    <view class="dark-hero">
+      <text class="oh-pill">待结算</text>
+      <text class="oh-sub">预计到账（元）</text>
+      <text class="oh-big">等待结算系统接入</text>
+      <text class="oh-sub">实际到账金额和时间以结算服务为准</text>
+    </view>
+
+    <view class="card">
+      <view class="card-title">费用明细</view>
+      <view class="kv-row last-kv"><text class="kv-lbl">结算明细</text><text class="kv-val">尚未配置结算服务</text></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">结算进度</view>
+      <view class="oh-cols dark-cols">
+        <view class="oh-col"><text class="green-txt">✓ 服务完成</text><text class="kv-lbl">17:34</text></view>
+        <view class="oh-col"><text class="green-txt">✓ 雇主确认</text><text class="kv-lbl">17:42</text></view>
+        <view class="oh-col"><text class="orange-txt">● 平台审核</text><text class="kv-lbl">24小时内</text></view>
+        <view class="oh-col"><text class="kv-lbl">○ 余额到账</text><text class="kv-lbl">待完成</text></view>
+      </view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="onNavTabClick" data-sec="income">查看收入账单</button>
+  </block>
+
+  <!-- 6. 服务人员入驻（对应服务端 PDF 第 2 页） -->
+  <block wx:elif="{{section === 'onboarding'}}">
+    <view class="card">
+      <view class="kv-row"><text class="kv-lbl">真实姓名</text><input class="kv-val" value="{{workerName}}" bindinput="onWorkerNameInput" placeholder="请输入身份证姓名" /></view>
+      <view class="card-title">身份与人像核验</view>
+      <view class="oh-cols dark-cols">
+        <view class="oh-col"><text class="emp-name">📱 手机号</text><text class="green-txt">{{phone ? '已验证' : '未验证'}}</text></view>
+        <view class="oh-col"><text class="emp-name">🪪 身份证</text><text class="orange-txt">待平台核验</text></view>
+        <view class="oh-col"><text class="emp-name">😊 人像采集</text><text class="orange-txt">待平台核验</text></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">服务技能（可多选）</view>
+      <view class="grid-2">
+        <view 
+          wx:for="{{workerSkills}}" 
+          wx:key="name"
+          class="grid-btn {{item.active ? 'active' : ''}}"
+          bindtap="toggleSkill"
+          data-index="{{index}}"
+        >{{item.name}} {{item.active ? '✓' : ''}}</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">证件与证书</view>
+      <view class="kv-row"><text class="kv-val">🩺 健康证（有证可立即上传）</text><text class="orange-txt">已上传</text></view>
+      <view class="kv-row last-kv"><text class="kv-val">📜 保洁技能证书</text><text class="orange-txt">已上传</text></view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="submitOnboarding">保存并进入下一步</button>
+  </block>
+
+  <!-- 7. 证书与技能（对应服务端 PDF 第 8 页） -->
+  <block wx:elif="{{section === 'certs'}}">
+    <view class="card emp-row">
+      <image class="thumb-sm" src="/images/login_hero.jpg" mode="aspectFill"></image>
+      <view class="emp-main">
+        <text class="emp-name">{{workerName || '服务人员'}}</text>
+        <text class="kv-lbl">第一服务职业：保洁员</text>
+      </view>
+      <text class="green-txt">✓ 接单权限正常</text>
+    </view>
+
+    <view class="card">
+      <view class="card-title">身份资质</view>
+      <view class="kv-row"><text class="kv-val">🪪 身份证与人像核验</text><text class="green-pill">已通过</text></view>
+      <view class="kv-row"><text class="kv-val">🩺 健康证（至 2027.08.20）</text><text class="green-pill">有效</text></view>
+      <view class="kv-row last-kv"><text class="kv-val">📜 养老护理技能证（至 2028.05.16）</text><text class="green-pill">有效</text></view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="saveRemindSettings">保存技能设置</button>
+  </block>
+
+  <!-- 8. 履约保证金（对应服务端 PDF 第 6 页） -->
+  <block wx:elif="{{section === 'deposit'}}">
+    <view class="dark-hero">
+      <text class="oh-sub">履约保证金</text>
+      <text class="oh-big">暂未开通</text>
+      <text class="oh-sub">保证金收款及托管账户尚未配置</text>
+    </view>
+
+    <view class="card">
+      <view class="card-title">账户流水</view>
+      <view class="kv-row" wx:for="{{depositLogs}}" wx:key="date">
+        <text class="kv-lbl">{{item.date}} · {{item.title}}</text>
+        <text class="{{item.green ? 'green-txt' : 'orange-txt'}}">{{item.amount}}</text>
+      </view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="payDeposit">查看收款配置状态</button>
+  </block>
+
+  <!-- 9. 收入账单与趋势（对应服务端 PDF 第 7 页） -->
+  <block wx:elif="{{section === 'income'}}">
+    <view class="dark-hero">
+      <view class="kv-row no-border">
+        <view>
+          <text class="oh-sub">可提现收入</text>
+          <text class="oh-big">暂无结算数据</text>
+        </view>
+        <button class="withdraw-btn" bindtap="withdrawIncome">立即提现</button>
+      </view>
+      <view class="oh-cols">
+        <view class="oh-col"><text class="oh-sub">本月收入</text><text class="oh-val">-</text></view>
+        <view class="oh-col"><text class="oh-sub">待结算</text><text class="oh-val">-</text></view>
+        <view class="oh-col"><text class="oh-sub">累计收入</text><text class="oh-val">-</text></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">收入趋势</view>
+      <view class="chart-bars">
+        <view class="c-col" wx:for="{{incomeTrend}}" wx:key="day">
+          <text class="c-val">{{item.val}}</text>
+          <view class="c-bar-wrap"><view class="c-bar" style="height: {{item.h}}"></view></view>
+          <text class="c-day">{{item.day}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">账单明细</view>
+      <view class="kv-row" wx:for="{{incomeBills}}" wx:key="title">
+        <view>
+          <text class="kv-val">{{item.title}}</text>
+          <text class="kv-lbl">{{item.time}}</text>
+        </view>
+        <text class="orange-txt">{{item.amount}} {{item.status}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 10. 接单提醒设置（对应服务端 PDF 第 5 页） -->
+  <block wx:else>
+    <view class="card kv-row" bindtap="toggleSwitch" data-field="remindMaster">
+      <view>
+        <text class="emp-name">🔔 接单提醒</text>
+        <text class="kv-lbl">及时接收可抢与派发订单</text>
+      </view>
+      <view class="toggle-pill {{remindMaster ? 'on' : ''}}"><view class="knob"></view></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">提醒方式</view>
+      <view class="kv-row"><text class="kv-val">🔊 接单铃声（清脆提示音）</text><text class="kv-lbl">铃声一 ›</text></view>
+      <view class="kv-row" bindtap="toggleSwitch" data-field="vibrateOn">
+        <text class="kv-val">📳 振动提醒（响铃时同步振动）</text>
+        <view class="toggle-pill {{vibrateOn ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+      <view class="kv-row last-kv" bindtap="toggleSwitch" data-field="bgNotifyOn">
+        <text class="kv-val">💬 后台通知（切换后台仍接收提醒）</text>
+        <view class="toggle-pill {{bgNotifyOn ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+    </view>
+
+    <view class="card kv-row">
+      <text class="kv-val">🕒 免打扰时段（派单和异常仍强提醒）</text>
+      <text class="kv-lbl">22:00 - 07:00 ›</text>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="saveRemindSettings">保存设置</button>
+  </block>
+</view>

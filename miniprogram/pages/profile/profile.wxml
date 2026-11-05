@@ -1,81 +1,138 @@
 <view class="container">
-  <!-- 雇主信息卡片 -->
-  <view class="user-card">
-    <view class="avatar-box">
-      <image class="avatar-img" src="/images/logo.jpg" mode="aspectFill"></image>
-      <view class="online-dot"></view>
-    </view>
-    <view class="user-meta">
-      <view class="user-title-row">
-        <text class="user-name">陈女士</text>
-        <view class="credit-tag">信用雇主 100分</view>
+  <!-- 顶部品牌与切换服务端按钮（完全对应用户端 PDF 第 10 页） -->
+  <view class="top-brand-bar">
+    <view class="tb-left">
+      <image class="tb-logo" src="/images/logo.jpg" mode="aspectFit"></image>
+      <view>
+        <text class="tb-title">太禾行</text>
+        <text class="tb-sub">我的 · 雇主端</text>
       </view>
-      <text class="user-phone">138****2068 · 已实名认证</text>
     </view>
-    <view class="switch-role-btn" bindtap="goToLogin">
-      <text class="switch-text">切换端</text>
+    <view class="switch-role-btn" bindtap="switchWorker">
+      <text class="switch-text">切换服务端</text>
     </view>
   </view>
 
-  <!-- 资金与预算账户概览卡片 -->
-  <view class="wallet-card">
+  <!-- 雇主信息卡片 -->
+  <view class="user-card">
+    <view class="avatar-box">
+      <view class="text-avatar">陈</view>
+    </view>
+    <view class="user-meta">
+      <view class="user-title-row">
+        <text class="user-name">{{userInfo.name}}</text>
+        <view class="credit-tag">信用雇主</view>
+      </view>
+      <text class="user-phone">{{userInfo.phone || '尚未绑定手机号'}}</text>
+    </view>
+    <view class="switch-role-btn" bindtap="goUserSection" data-sec="security">
+      <text class="switch-text">资料</text>
+    </view>
+  </view>
+
+  <!-- 资金与预算账户概览卡片（点击进入预算账户 P22） -->
+  <view class="wallet-card" bindtap="goUserSection" data-sec="wallet">
     <view class="wallet-top">
       <text class="wallet-label">预算账户余额 (元)</text>
-      <text class="wallet-amount">¥1,280.00</text>
+      <text class="wallet-amount">预算账户未开通</text>
     </view>
     <view class="wallet-divider"></view>
     <view class="wallet-stats">
       <view class="stat-col">
-        <text class="stat-num">¥168</text>
+        <text class="stat-num">¥{{userInfo.pendingAmount}}</text>
         <text class="stat-name">待结算</text>
       </view>
       <view class="stat-col">
-        <text class="stat-num">26 单</text>
+        <text class="stat-num">{{userInfo.orderCount}} 单</text>
         <text class="stat-name">累计发布</text>
       </view>
-      <view class="stat-col">
-        <text class="stat-num">¥860</text>
+      <view class="stat-col" catchtap="goUserSection" data-sec="invoices">
+        <text class="stat-num">¥{{userInfo.invoiceAmount}}</text>
         <text class="stat-name">可开发票</text>
       </view>
     </view>
   </view>
 
-  <!-- 常用功能区 -->
+  <!-- 我的服务 8 宫格（全部跳转真实二级页，对应 PDF 第 10 页） -->
   <view class="menu-card">
-    <view class="menu-heading">我的服务</view>
+    <view class="menu-heading-row">
+      <text class="menu-heading">我的服务</text>
+      <text class="menu-more" bindtap="goOrders">全部 ›</text>
+    </view>
     <view class="menu-grid">
       <view class="menu-item" bindtap="goOrders">
-        <text class="menu-icon">📄</text>
+        <text class="menu-icon">📋</text>
         <text class="menu-text">我的订单</text>
       </view>
-      <view class="menu-item" bindtap="showFeatureToast" data-name="常用地址">
-        <text class="menu-icon">📍</text>
-        <text class="menu-text">常用地址</text>
-      </view>
-      <view class="menu-item" bindtap="showFeatureToast" data-name="发票管理">
-        <text class="menu-icon">🧾</text>
-        <text class="menu-text">发票管理</text>
-      </view>
-      <view class="menu-item" bindtap="showFeatureToast" data-name="优惠券">
+      <view class="menu-item" bindtap="goUserSection" data-sec="coupons">
         <text class="menu-icon">🎟️</text>
         <text class="menu-text">优惠券中心</text>
       </view>
-      <view class="menu-item" bindtap="showFeatureToast" data-name="企业认证">
-        <text class="menu-icon">🏢</text>
-        <text class="menu-text">企业认证</text>
+      <view class="menu-item" bindtap="goUserSection" data-sec="favorites">
+        <text class="menu-icon">🧡</text>
+        <text class="menu-text">关注人员</text>
       </view>
-      <view class="menu-item" bindtap="contactService">
+      <view class="menu-item" bindtap="goAfterSales" data-mode="progress">
+        <text class="menu-icon">🔄</text>
+        <text class="menu-text">售后退款</text>
+      </view>
+      <view class="menu-item" bindtap="goUserSection" data-sec="addresses">
+        <text class="menu-icon">📍</text>
+        <text class="menu-text">常用地址</text>
+      </view>
+      <view class="menu-item" bindtap="goUserSection" data-sec="invoices">
+        <text class="menu-icon">🧾</text>
+        <text class="menu-text">发票管理</text>
+      </view>
+      <view class="menu-item" bindtap="goUserSection" data-sec="help">
         <text class="menu-icon">🎧</text>
-        <text class="menu-text">客服与安全</text>
+        <text class="menu-text">联系客服</text>
       </view>
-      <view class="menu-item" bindtap="showFeatureToast" data-name="城市合伙人">
-        <text class="menu-icon">🤝</text>
-        <text class="menu-text">城市合伙人</text>
-      </view>
-      <view class="menu-item" bindtap="showFeatureToast" data-name="账号设置">
+      <view class="menu-item" bindtap="goUserSection" data-sec="security">
         <text class="menu-icon">⚙️</text>
-        <text class="menu-text">账号与安全</text>
+        <text class="menu-text">账号设置</text>
       </view>
+    </view>
+  </view>
+
+  <!-- 合作与分享双栏卡片（对应 PDF 第 10 页） -->
+  <view class="menu-card">
+    <view class="menu-heading">合作与分享</view>
+    <view class="coop-row">
+      <view class="coop-box" bindtap="goUserSection" data-sec="partner">
+        <text class="coop-ico">🤝</text>
+        <text class="coop-txt">城市合伙人</text>
+        <text class="coop-arr">›</text>
+      </view>
+      <view class="coop-box" bindtap="goUserSection" data-sec="invite">
+        <text class="coop-ico">🔗</text>
+        <text class="coop-txt">邀请亲友</text>
+        <text class="coop-arr">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 平台消息中心橙色横幅（对应 PDF 第 10 页） -->
+  <view class="msg-center-banner" bindtap="goMessages">
+    <view>
+      <text class="mcb-title">平台消息中心</text>
+      <text class="mcb-sub">订单、规则与服务通知统一触达</text>
+    </view>
+    <view class="mcb-pill">2条新消息</view>
+  </view>
+
+  <!-- 平台保障与企业/社区养老机构入口 -->
+  <view class="menu-card list-entries">
+    <view class="entry-line" bindtap="goUserSection" data-sec="enterprise">
+      <text class="el-title">🛡️ 平台保障与企业认证接口</text>
+      <text class="el-more">查看 ›</text>
+    </view>
+    <view class="entry-line last-el" bindtap="goAfterSales" data-mode="complaint">
+      <view>
+        <text class="el-title">🏡 社区养老服务机构入口</text>
+        <text class="el-sub">机构接口预留 · 投诉与廉政举报全程留痕</text>
+      </view>
+      <text class="el-more">进入 ›</text>
     </view>
   </view>
 

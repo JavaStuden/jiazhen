@@ -1,0 +1,96 @@
+<view class="container">
+  <!-- 顶部服务人员名片（完全对应用户端 PDF 第 13 页） -->
+  <view class="card profile-top-card">
+    <image class="p-avatar" src="/images/login_hero.jpg" mode="aspectFill"></image>
+    <view class="p-info">
+      <view class="p-name-row">
+        <text class="p-name">{{provider.name}}</text>
+        <text class="p-gold">{{provider.badge || '金牌服务'}}</text>
+        <button class="follow-btn {{followed ? 'followed' : ''}}" bindtap="toggleFollow">
+          {{followed ? '已关注' : '关注'}}
+        </button>
+      </view>
+      <text class="p-title">{{provider.title || '保洁师 · 养老护理员 · 从业6年'}}</text>
+      <view class="p-tags">
+        <text class="p-tag">实名认证</text>
+        <text class="p-tag">健康证有效</text>
+        <text class="p-tag">信用{{provider.creditScore}}分</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 橙色四格数据看板 -->
+  <view class="orange-stats-bar">
+    <view class="o-stat">
+      <text class="o-num">{{provider.completedOrders}}</text>
+      <text class="o-lbl">已完成</text>
+    </view>
+    <view class="o-stat">
+      <text class="o-num">{{provider.rating || '4.9'}}</text>
+      <text class="o-lbl">综合评分</text>
+    </view>
+    <view class="o-stat">
+      <text class="o-num">{{provider.goodRate || '98%'}}</text>
+      <text class="o-lbl">好评率</text>
+    </view>
+    <view class="o-stat">
+      <text class="o-num">{{provider.experienceYears || 6}}年</text>
+      <text class="o-lbl">服务经验</text>
+    </view>
+  </view>
+
+  <!-- 服务技能卡片 -->
+  <view class="card">
+    <view class="card-title">服务技能</view>
+    <view class="skill-grid">
+      <view class="skill-box" wx:for="{{provider.skills}}" wx:key="*this">
+        <text class="skill-icon">{{index === 0 ? '🧹' : index === 1 ? '👵' : index === 2 ? '💬' : '🍲'}}</text>
+        <text class="skill-name">{{item}}</text>
+      </view>
+    </view>
+    <view class="hourly-row">
+      <text class="hourly-lbl">🪙 服务价格</text>
+      <text class="hourly-val">¥{{provider.hourlyPrice || 42}}<text class="hourly-unit">/小时起</text></text>
+    </view>
+  </view>
+
+  <!-- 证件与保障 -->
+  <view class="card">
+    <view class="card-title">证件与保障</view>
+    <view class="cert-row" bindtap="viewCertModal" data-title="身份证与人像核验">
+      <text class="cert-name">🪪 身份证与人像核验</text>
+      <text class="cert-ok">已通过 ✓ ›</text>
+    </view>
+    <view class="cert-row last-cert" bindtap="viewCertModal" data-title="养老护理技能证书">
+      <text class="cert-name">📜 养老护理技能证书</text>
+      <text class="cert-ok">有效期至{{provider.skillCertValidUntil || '2028年'}} ✓ ›</text>
+    </view>
+  </view>
+
+  <!-- 用户评价 -->
+  <view class="card">
+    <view class="card-head-between">
+      <text class="card-title no-mb">用户评价</text>
+      <text class="more-txt">{{provider.reviewCount || 0}} 条评价</text>
+    </view>
+    <view class="review-item" wx:for="{{provider.reviews}}" wx:key="id">
+      <view class="rev-avatar">👩</view>
+      <view class="rev-body">
+        <view class="rev-top">
+          <text class="rev-user">{{item.user}}</text>
+          <text class="rev-stars">★★★★★</text>
+        </view>
+        <text class="rev-text">{{item.text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="guarantee-strip">🛡️ 平台担保 · 服务留痕 · 售后介入</view>
+
+  <view class="bottom-placeholder"></view>
+
+  <view class="bottom-bar dual-bar">
+    <button class="outline-btn" bindtap="consultOnline">💬 在线咨询</button>
+    <button class="primary-btn main-bar-btn" bindtap="bookProvider">📅 预约服务</button>
+  </view>
+</view>

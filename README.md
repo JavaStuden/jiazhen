@@ -1,25 +1,45 @@
-# 太禾行到家
+# 太禾行到家（三端全栈项目）
 
-三端项目：`backend`（Spring Boot）、`admin-web`（Vue 3 + Vite）、`miniprogram`（微信原生小程序）。
+本项目包含三端代码与部署配置：
+- `backend`：Spring Boot 3.4 + Spring Data JPA + MySQL 8.4 后端服务
+- `admin-web`：Vue 3 + Vite 5 运营管理端（支持服务套餐与具体服务内容可视化配置、动态指派服务人员、订单异常加时审核）
+- `miniprogram`：微信原生小程序（雇主端 + 服务人员端同体，1:1 还原《太禾行用户端UI视觉图》与《太禾行服务端UI视觉图》及最新修订图 `0.jpg`、`2.jpg`、`4.jpg`）
 
-## 运行
+## 核心亮点与原型对应关系
 
-后端：在 `backend` 目录用 IDE 运行 `TaihexingApplication`，默认 `http://localhost:8080`。安装 Maven 后也可执行 `mvn spring-boot:run`。项目已配置 MySQL 和 JPA。
+1. **登录与角色切换（`pages/login/login`，对应图四 `4.jpg` + 雇主/服务端协议确认页）**
+   - 沉浸式护工与老人实景头图 + “用心服务 让生活更美好 ♡”品牌区。
+   - 手机号 + 验证码登录，底部平铺并列“我是雇主”（橙色）与“我是服务人员”（绿色）双角色卡片。
+   - 首次登录自动弹出《平台协议确认 / 服务人员协议确认》底部确认抽屉；协议确认状态目前仅保存在小程序端。
 
-管理端：
+2. **选择服务（`pages/services/services`，对应图二 `0.jpg`）**
+   - 前台不再显示“固定/任意模式”弹窗，直接读取并展示后台配置的服务套餐（如 `2小时基础保洁 ¥118`、`3小时深度保洁 ¥168`、`4小时全屋保洁 ¥228`）及“本套餐服务内容”（客厅与卧室、厨房、卫生间、收尾整理四大区域明细与免责声明）。
 
-```bash
-cd admin-web
-npm install
-npm run dev
-```
+3. **发布需求（`pages/create-order/create-order`，对应图三 `2.jpg`）**
+   - 顶部三步进度指示器（1 选择服务 — 2 填写需求 — 3 确认支付）与橙色语音下单横幅。
+   - 服务规格卡片内含“选择套餐”行（`3小时深度保洁 ›`），下方完整调出 **“本次上门服务内容”**（6 项橙点清单与不包含条款说明），点击“下一步 · 确认支付”进入支付确认闭环。
 
-默认 `http://localhost:5173`，Vite 会把 `/api` 代理到后端。
+4. **雇主端主要业务页面**
+   - `pages/index/index`：雇主端首页（服务分类入口、动态推荐服务、快捷发需求入口；优惠活动未配置时不声称领取成功）。
+   - `pages/order-confirm/order-confirm`：确认并支付（标准发布/付费加急、技术服务费平台独立设置、微信支付/预算账户）与发布成功智能匹配推荐页。
+   - `pages/order-detail/order-detail`：待接单匹配进度详情 & 服务进行中履约详情（到家打卡记录、服务时长异常待确认卡片、三方沟通入口）。
+   - `pages/provider-detail/provider-detail`：服务人员详情主页（李阿姨金牌服务看板、技能价格、实名/健康证/技能证核验、用户评价）。
+   - `pages/messages/messages`：按订单持久化的雇主/服务人员留言与服务时长调整确认。
+   - `pages/after-sales/after-sales`：申请售后、售后进度时间轴、评价服务、投诉与廉政举报。
+   - `pages/user-center/user-center`：常用地址和关注服务人员写入数据库；未配置的预算账户、优惠券、发票及企业服务不会展示虚构交易。
 
-小程序：用微信开发者工具打开 `miniprogram`。服务列表可在线读取；微信登录、发布订单、订单查询和服务人员接单会在身份与角色权限接入后开放。
+5. **服务端（阿姨/师傅端）16 页全流程工作台**
+   - `pages/worker/worker`：从数据库读取可抢订单和本人服务单。
+   - `pages/worker-ops/worker-ops`：抢单、GPS 到家打卡、服务异常上报、完工状态、服务人员入驻申请和提醒设置已接入后端；保证金、照片存储、结算和提现依赖的支付/存储通道尚未配置。
 
-服务器部署地址：管理端 `https://voice.yourunshi.online/taihexing/`；小程序 API 根地址 `https://voice.yourunshi.online/taihexing/api/public`。微信公众平台中需将 `voice.yourunshi.online` 加入小程序 HTTPS request 合法域名，之后用开发者工具预览并提交小程序版本。
+## 运行与部署
 
-管理接口（需管理员会话）：`POST /api/auth/login`、`GET /api/auth/me`、`GET /api/admin/dashboard`、`GET /api/admin/services`、`GET /api/admin/providers`、`GET /api/admin/orders`、`PATCH /api/admin/orders/{id}/status`、`POST /api/admin/orders/{id}/accept`。小程序当前只公开 `GET /api/public/services`；发布订单、查询订单和服务人员接单要在微信登录与身份权限接入后开放。
+- **后端（`backend`）**：运行 `TaihexingApplication`（默认 `http://localhost:8080`），首次启动只初始化服务套餐；服务人员与订单通过实际入驻、管理和下单流程产生，不写入演示人员或订单。
+- **管理端（`admin-web`）**：执行 `npm install && npm run dev`（默认 `http://localhost:5173`），可在“服务项目与套餐配置”中新增或编辑套餐及四大区域/6项上门服务清单，保存后实时同步至小程序。
+- **小程序（`miniprogram`）**：使用微信开发者工具打开 `miniprogram` 目录即可预览全部雇主端与服务端页面。
 
-可用 `compose.yaml` 部署 MySQL 与后端；数据库卷独立持久化。`deploy/` 下的 systemd timer 每日压缩备份数据库并保留 14 天。首次启动时会写入服务项目和服务人员演示数据。生产环境还需配置微信登录、支付、地图和对象存储。
+## 接入状态
+
+微信登录、手机号授权、订单创建与查询、微信 JSAPI 下单及支付状态查询、抢单、打卡、异常审核、售后申请与撤销、评价、服务人员申请和订单留言均调用后端。个人地址、收藏服务人员和接单提醒存于登录用户记录。
+
+正式环境还需配置微信小程序 AppID/AppSecret、微信支付商户号/证书/私钥/公网回调地址，并完成小程序服务器域名校验。预算账户、优惠券、发票、保证金托管、服务照片、提现、企业/合伙人申请、客服热线和平台系统通知目前没有对应业务服务，界面明确提示未开通，不会生成假成功结果。当前仓库未包含 Maven wrapper；验证后端请在安装 Maven 3.9+ 与 JDK 21 的环境运行 `mvn -DskipTests package`。

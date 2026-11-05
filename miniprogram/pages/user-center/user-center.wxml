@@ -1,0 +1,450 @@
+<view class="container">
+  <!-- 1. 优惠券中心（对应用户端 PDF 第 16 页） -->
+  <block wx:if="{{section === 'coupons'}}">
+    <view class="orange-hero-card">
+      <image class="oh-logo" src="/images/logo.jpg" mode="aspectFit"></image>
+      <view class="oh-main">
+        <text class="oh-title">优惠券</text>
+        <text class="oh-sub">当前暂无可用优惠券</text>
+      </view>
+      <button class="oh-btn" bindtap="goSelectService">去选服务</button>
+    </view>
+
+    <view class="tab-strip">
+      <view 
+        wx:for="{{['可领取', '可使用 3', '已失效']}}" 
+        wx:key="*this"
+        class="ts-item {{couponTab === item ? 'active' : ''}}"
+        bindtap="switchCouponTab"
+        data-tab="{{item}}"
+      >{{item}}</view>
+    </view>
+
+    <view class="card coupon-card" wx:for="{{coupons}}" wx:key="id">
+      <view class="cp-left">
+        <text class="cp-amt">{{item.amount}}</text>
+        <text class="cp-eval" wx:if="{{item.isEval}}">上门评估</text>
+      </view>
+      <view class="cp-mid">
+        <text class="cp-title">{{item.title}}</text>
+        <text class="cp-cond">{{item.cond}}</text>
+        <text class="cp-sub">{{item.sub}}</text>
+        <text class="cp-exp">🕒 {{item.expire}}</text>
+      </view>
+      <button 
+        class="cp-btn {{item.claimed ? 'outline' : ''}}" 
+        bindtap="{{item.claimed ? 'goSelectService' : 'claimCouponItem'}}"
+        data-index="{{index}}"
+      >
+        {{item.isEval ? '查看详情' : (item.claimed ? '去使用' : '立即领取')}}
+      </button>
+    </view>
+
+    <view class="notice-card">
+      <text class="nc-title">🛡️ 使用说明</text>
+      <text class="nc-line">· 优惠券不抵扣技术服务费</text>
+      <text class="nc-line">· 每个订单限用1张</text>
+      <text class="nc-line">· 退款后优惠券按规则退回</text>
+    </view>
+  </block>
+
+  <!-- 2. 常用地址列表（对应用户端 PDF 第 20 页） -->
+  <block wx:elif="{{section === 'addresses'}}">
+    <view class="loc-banner">
+      <text class="loc-ico">📍</text>
+      <view class="loc-body">
+        <text class="loc-lbl">当前定位</text>
+        <text class="loc-val">重庆市渝北区新月路</text>
+      </view>
+      <text class="loc-act">重新定位 ›</text>
+    </view>
+
+    <view class="sec-head">
+      <text class="sh-title">我的地址</text>
+      <text class="sh-sub">下单时可快速选择</text>
+    </view>
+
+    <view 
+      class="card addr-card {{item.isDefault ? 'default-border' : ''}}" 
+      wx:for="{{addresses}}" 
+      wx:key="id"
+      bindtap="selectAddressForOrder"
+      data-item="{{item}}"
+    >
+      <view class="addr-top">
+        <view>
+          <view class="addr-title-row">
+            <text class="def-pill" wx:if="{{item.isDefault}}">默认</text>
+            <text class="addr-title">{{item.title}}</text>
+          </view>
+          <text class="addr-detail">{{item.fullAddress}}</text>
+          <text class="addr-user">{{item.contact}}  {{item.phone}}</text>
+          <text class="addr-tag">{{item.tag}}</text>
+        </view>
+        <text class="edit-ico" catchtap="goSection" data-sec="address-edit">✎</text>
+      </view>
+      <view class="addr-bottom">
+        <text class="ab-btn" catchtap="setDefaultAddress" data-id="{{item.id}}">✓ 设为默认</text>
+        <text class="ab-btn" catchtap="deleteAddress" data-id="{{item.id}}">🗑️ 删除</text>
+      </view>
+    </view>
+
+    <view class="notice-card">
+      <text class="nc-title">🔒 隐私保护</text>
+      <text class="nc-line">平台仅在服务接单后向服务人员展示必要地址信息。</text>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="goSection" data-sec="address-edit">+ 新增地址</button>
+  </block>
+
+  <!-- 3. 新增地址（对应用户端 PDF 第 21 页） -->
+  <block wx:elif="{{section === 'address-edit'}}">
+    <view class="card map-mock-card">
+      <view class="map-pin">📍</view>
+      <view class="map-tag">重庆市渝北区</view>
+    </view>
+
+    <view class="card">
+      <view class="form-row">
+        <text class="f-lbl">联系人</text>
+        <input class="f-inp" value="{{addrForm.contact}}" bindinput="onAddrInput" data-field="contact" />
+      </view>
+      <view class="form-row">
+        <text class="f-lbl">手机号码</text>
+        <input class="f-inp" value="{{addrForm.phone}}" bindinput="onAddrInput" data-field="phone" />
+      </view>
+      <view class="form-row">
+        <text class="f-lbl">所在地区</text>
+        <input class="f-inp" value="{{addrForm.region}}" bindinput="onAddrInput" data-field="region" />
+      </view>
+      <view class="form-row">
+        <text class="f-lbl">详细地址</text>
+        <input class="f-inp" value="{{addrForm.detail}}" bindinput="onAddrInput" data-field="detail" />
+      </view>
+      <view class="form-row last-row">
+        <text class="f-lbl">门牌号</text>
+        <input class="f-inp" value="{{addrForm.doorplate}}" bindinput="onAddrInput" data-field="doorplate" />
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">地址标签</view>
+      <view class="tag-chips">
+        <view 
+          wx:for="{{['家', '公司', '父母家', '其他']}}" 
+          wx:key="*this"
+          class="t-chip {{addrForm.tag === item ? 'active' : ''}}"
+          bindtap="selectAddrTag"
+          data-tag="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+
+    <view class="card switch-card" bindtap="toggleAddrDefault">
+      <view>
+        <text class="f-lbl">设为默认地址</text>
+        <text class="sh-sub">下单时优先使用此地址</text>
+      </view>
+      <view class="toggle-pill {{addrForm.isDefault ? 'on' : ''}}"><view class="knob"></view></view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="saveNewAddress">保存地址</button>
+  </block>
+
+  <!-- 4. 预算账户（对应用户端 PDF 第 22 页） -->
+  <block wx:elif="{{section === 'wallet'}}">
+    <view class="dark-wallet-hero">
+      <text class="dw-lbl">可用预算（元）</text>
+      <text class="dw-amt">暂未开通</text>
+      <view class="dw-cols">
+        <view class="dw-col"><text class="dw-sub">冻结金额</text><text class="dw-val">-</text></view>
+        <view class="dw-col"><text class="dw-sub">本月支出</text><text class="dw-val">-</text></view>
+        <view class="dw-col"><text class="dw-sub">累计充值</text><text class="dw-val">-</text></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">预算账户支付通道尚未配置</view>
+      <view class="progress-bar"><view class="progress-fill" style="width: 0%"></view></view>
+      <view class="dw-cols dark-txt">
+        <view class="dw-col"><text class="dw-sub">已使用(元)</text><text class="dw-val orange-txt">-</text></view>
+        <view class="dw-col"><text class="dw-sub">计划预算(元)</text><text class="dw-val">-</text></view>
+        <view class="dw-col"><text class="dw-sub">剩余可用(元)</text><text class="dw-val green-txt">-</text></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">最近账单</view>
+      <view class="bill-row" wx:for="{{walletBills}}" wx:key="id">
+        <view>
+          <text class="b-title">{{item.title}}</text>
+          <text class="b-time">{{item.time}}</text>
+        </view>
+        <text class="b-amt {{item.type === 'in' ? 'green-txt' : 'orange-txt'}}">{{item.amount}}</text>
+      </view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="rechargeWallet">充值预算账户</button>
+  </block>
+
+  <!-- 5. 发票管理（对应用户端 PDF 第 23 页） -->
+  <block wx:elif="{{section === 'invoices'}}">
+    <view class="orange-hero-card">
+      <view class="oh-main">
+        <text class="oh-sub">可开票金额（元）</text>
+      <text class="oh-big">暂未开通</text>
+      <text class="oh-sub">开票资质与电子发票服务尚未配置</text>
+      </view>
+      <button class="oh-btn" bindtap="goSection" data-sec="invoice-apply">申请开票</button>
+    </view>
+
+    <view class="card">
+      <view class="card-title">可开票订单</view>
+      <view 
+        class="inv-row" 
+        wx:for="{{invoiceOrders}}" 
+        wx:key="id"
+        bindtap="toggleInvoiceOrder"
+        data-index="{{index}}"
+      >
+        <view class="check-circle {{item.checked ? 'checked' : ''}}">{{item.checked ? '✓' : ''}}</view>
+        <view class="inv-main">
+          <text class="b-title">{{item.name}}</text>
+          <text class="b-time">{{item.date}} 订单号：{{item.orderNo}}</text>
+          <text class="b-time">服务费 · 可开电子普通发票</text>
+        </view>
+        <text class="b-amt orange-txt">¥{{item.amount}}.00</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">默认发票抬头</view>
+      <text class="b-title">🏢 重庆太禾商贸有限公司</text>
+      <text class="b-time">税号：9150********621X</text>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="goSection" data-sec="invoice-apply">
+      选择订单开票（已选 ¥{{selectedInvoiceAmount}}）
+    </button>
+  </block>
+
+  <!-- 6. 申请开票（对应用户端 PDF 第 24 页） -->
+  <block wx:elif="{{section === 'invoice-apply'}}">
+    <view class="card">
+      <text class="sh-sub">本次开票金额</text>
+      <text class="oh-big orange-txt">¥{{selectedInvoiceAmount}}</text>
+    </view>
+
+    <view class="card">
+      <view class="card-title">发票类型</view>
+      <view class="tag-chips">
+        <view 
+          wx:for="{{['电子普通发票', '纸质普通发票']}}" 
+          wx:key="*this"
+          class="t-chip {{invoiceType === item ? 'active' : ''}}"
+          bindtap="selectInvoiceType"
+          data-type="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">发票抬头</view>
+      <view class="form-row"><text class="f-lbl">抬头名称</text><text class="f-val">重庆太禾商贸有限公司</text></view>
+      <view class="form-row"><text class="f-lbl">纳税人识别号</text><text class="f-val">9150********621X</text></view>
+      <view class="form-row"><text class="f-lbl">发票内容</text><text class="f-val">服务费</text></view>
+      <view class="form-row last-row"><text class="f-lbl">接收邮箱</text><text class="f-val">{{invoiceEmail}}</text></view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="submitInvoiceApply">提交开票申请</button>
+  </block>
+
+  <!-- 7. 我的关注（对应用户端 PDF 第 28 页） -->
+  <block wx:elif="{{section === 'favorites'}}">
+    <view class="card" wx:for="{{favProviders}}" wx:key="id">
+      <view class="fav-top" bindtap="goProviderDetail" data-id="{{item.id}}">
+        <image class="fav-avatar" src="/images/login_hero.jpg" mode="aspectFill"></image>
+        <view class="fav-main">
+          <view class="addr-title-row">
+            <text class="addr-title">{{item.name}}</text>
+            <text class="def-pill">{{item.badge}}</text>
+          </view>
+          <text class="b-time">信用{{item.creditScore}}分 · {{item.status}} · 距您 {{item.distance}}</text>
+          <view class="tag-chips small-chips">
+            <text class="mini-tag" wx:for="{{item.skills}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+        <button class="cp-btn">预约</button>
+      </view>
+      <view class="dw-cols dark-txt fav-stats">
+        <view class="dw-col"><text class="dw-val">{{item.completedOrders}}单</text><text class="dw-sub">服务订单</text></view>
+        <view class="dw-col"><text class="dw-val">{{item.goodRate}}</text><text class="dw-sub">好评率</text></view>
+        <view class="dw-col"><text class="dw-val">{{item.onTimeRate}}</text><text class="dw-sub">准时率</text></view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 8. 企业认证（对应用户端 PDF 第 29 页） -->
+  <block wx:elif="{{section === 'enterprise'}}">
+    <view class="orange-hero-card">
+      <view class="oh-main">
+        <text class="oh-title">认证企业享更多雇主权益</text>
+        <text class="oh-sub">发布额度提升 · 专属服务 · 企业发票</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">企业基本信息</view>
+      <view class="form-row"><text class="f-lbl">企业名称</text><text class="f-val">重庆太禾商贸有限公司</text></view>
+      <view class="form-row"><text class="f-lbl">统一社会信用代码</text><text class="f-val">9150********621X</text></view>
+      <view class="form-row"><text class="f-lbl">法定代表人</text><text class="f-val">陈先生</text></view>
+      <view class="form-row last-row"><text class="f-lbl">联系人</text><text class="f-val">陈女士 138****2068</text></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">企业账户验证</view>
+      <view class="form-row"><text class="f-lbl">开户银行</text><text class="f-val">招商银行重庆分行</text></view>
+      <view class="form-row last-row"><text class="f-lbl">银行账户(尾号)</text><text class="f-val">8268</text></view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="submitEnterpriseCert">提交认证审核</button>
+  </block>
+
+  <!-- 9. 账号与安全（对应用户端 PDF 第 30 页） -->
+  <block wx:elif="{{section === 'security'}}">
+    <view class="card sec-score-card">
+      <view class="score-ring">92</view>
+      <view class="fav-main">
+        <text class="addr-title">账号安全良好</text>
+        <text class="b-time">已开启5项安全保护</text>
+      </view>
+      <text class="green-txt">✓ 安全</text>
+    </view>
+
+    <view class="card">
+      <view class="card-title">登录与身份</view>
+      <view class="form-row"><text class="f-lbl">📱 手机号码</text><text class="f-val green-txt">138****2068 已绑定 ›</text></view>
+      <view class="form-row"><text class="f-lbl">🪪 实名认证</text><text class="f-val green-txt">陈* 已认证 ›</text></view>
+      <view class="form-row last-row"><text class="f-lbl">😊 人脸验证</text><text class="f-val green-txt">已开启 ›</text></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">支付与隐私</view>
+      <view class="form-row"><text class="f-lbl">🔒 预算账户保护</text><text class="f-val green-txt">已开启 ›</text></view>
+      <view class="form-row"><text class="f-lbl">📞 隐私号保护</text><text class="f-val green-txt">已开启 ›</text></view>
+      <view class="form-row last-row"><text class="f-lbl">🔔 消息权限</text><text class="f-val green-txt">已开启 ›</text></view>
+    </view>
+  </block>
+
+  <!-- 10. 城市合伙人（对应用户端 PDF 第 31 页 / 服务端 PDF 第 15 页） -->
+  <block wx:elif="{{section === 'partner'}}">
+    <view class="orange-hero-card">
+      <view class="oh-main">
+        <text class="def-pill">重庆招募中</text>
+        <text class="oh-title">与太禾行一起 把专业服务带到更多家庭</text>
+        <text class="oh-sub">区域合作 · 资源共建 · 长期服务</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">合作联系人</view>
+      <view class="form-row"><text class="f-lbl">姓名</text><text class="f-val">{{partnerRole === '服务人员' ? '李阿姨' : '陈女士'}}</text></view>
+      <view class="form-row"><text class="f-lbl">所在城市</text><text class="f-val">重庆市</text></view>
+      <view class="form-row last-row"><text class="f-lbl">当前身份</text><text class="f-val">{{partnerRole}}</text></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">合作方向（可多选）</view>
+      <view class="tag-chips">
+        <view 
+          wx:for="{{partnerDirections}}" 
+          wx:key="*this"
+          class="t-chip {{selectedPartnerDir === item ? 'active' : ''}}"
+          bindtap="selectPartnerDir"
+          data-dir="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="submitPartnerApply">提交合作意向</button>
+  </block>
+
+  <!-- 11. 邀请好友（对应用户端 PDF 第 32 页 / 服务端 PDF 第 16 页） -->
+  <block wx:elif="{{section === 'invite'}}">
+    <view class="orange-hero-card invite-hero">
+      <text class="oh-title">邀请亲友使用太禾行</text>
+      <text class="oh-sub">把安心、专业的到家服务分享给身边的人</text>
+      <view class="invite-link-box" bindtap="copyInviteLink">
+        <view>
+          <text class="b-time">我的邀请链接</text>
+          <text class="addr-title">{{inviteLink}}</text>
+        </view>
+        <text class="orange-txt">复制 🔗</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">分享流程</view>
+      <view class="form-row"><text class="f-lbl">1. 选择分享渠道</text><text class="b-time">系统生成专属邀请链接</text></view>
+      <view class="form-row"><text class="f-lbl">2. 亲友打开链接</text><text class="b-time">直接进入太禾行登录页</text></view>
+      <view class="form-row last-row"><text class="f-lbl">3. 完成注册使用</text><text class="b-time">邀请关系由平台记录</text></view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">邀请记录</view>
+      <view class="dw-cols dark-txt">
+        <view class="dw-col"><text class="dw-sub">已发送邀请</text><text class="dw-val">12次</text></view>
+        <view class="dw-col"><text class="dw-sub">成功注册</text><text class="dw-val orange-txt">5人</text></view>
+      </view>
+    </view>
+
+    <button class="primary-btn full-btn" bindtap="copyInviteLink">立即分享</button>
+  </block>
+
+  <!-- 12. 帮助与客服（对应用户端 PDF 第 33 页） -->
+  <block wx:else>
+    <view class="orange-hero-card">
+      <view class="oh-main">
+        <text class="oh-title">您好，有什么可以帮您？</text>
+        <text class="oh-sub">平台客服 7×24小时为您服务</text>
+      </view>
+      <text class="cs-big-ico">🎧</text>
+    </view>
+
+    <view class="dual-cards">
+      <view class="card half-card" bindtap="openOnlineChat">
+        <text class="addr-title">💬 在线客服</text>
+        <text class="b-time">平均30秒响应</text>
+        <button class="cp-btn full-w">立即咨询</button>
+      </view>
+      <view class="card half-card" bindtap="callHotLine">
+        <text class="addr-title">📞 紧急热线</text>
+        <text class="b-time">服务安全紧急问题</text>
+        <button class="cp-btn full-w">拨打热线</button>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">热门问题</view>
+      <view 
+        class="form-row" 
+        wx:for="{{faqList}}" 
+        wx:key="*this"
+        bindtap="showFaqAnswer"
+        data-q="{{item}}"
+      >
+        <text class="f-lbl">{{item}}</text>
+        <text class="b-time">›</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">我的服务</view>
+      <view class="dw-cols dark-txt">
+        <view class="dw-col" bindtap="goAfterSalesPage" data-mode="progress"><text class="dw-val">🕒 售后进度</text></view>
+        <view class="dw-col" bindtap="goAfterSalesPage" data-mode="complaint"><text class="dw-val">🛡️ 投诉举报</text></view>
+        <view class="dw-col" bindtap="goAfterSalesPage" data-mode="apply"><text class="dw-val">📝 申请售后</text></view>
+      </view>
+    </view>
+  </block>
+</view>
